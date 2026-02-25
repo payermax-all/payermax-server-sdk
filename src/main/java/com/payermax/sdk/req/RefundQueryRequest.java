@@ -2,19 +2,25 @@ package com.payermax.sdk.req;
 
 import com.payermax.sdk.api.BaseRequest;
 import com.payermax.sdk.resp.RefundQueryResponse;
-
 import java.io.Serializable;
 
 /**
- * @author raoxw
+ * 退款查询
+ *
+ * API 路径: /aggregate-pay/api/gateway/refundQuery
+ * 请求方法: POST
  **/
 public class RefundQueryRequest extends BaseRequest<RefundQueryResponse> implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     /**
-     * 退款申请号【特殊可选-和退款交易单号字段有一个必填】
+     * 原商户退款单号	
      */
     private String outRefundNo;
+
     /**
-     * 退款交易单号【特殊可选-和退款申请号字段有一个必填】
+     * PayerMax退款流水号，与原商户退款单号二选一上送	
      */
     private String refundTradeNo;
 

@@ -8,14 +8,8 @@ import com.payermax.sdk.config.GlobalMerchantConfig;
 import com.payermax.sdk.config.MerchantConfig;
 import com.payermax.sdk.domain.GatewayResult;
 import com.payermax.sdk.enums.Env;
-import com.payermax.sdk.req.PayoutQueryRequest;
-import com.payermax.sdk.req.PayoutRequest;
-import com.payermax.sdk.req.TradeOrderRequest;
-import com.payermax.sdk.req.TradeQueryRequest;
-import com.payermax.sdk.resp.PayoutQueryResponse;
-import com.payermax.sdk.resp.PayoutResponse;
-import com.payermax.sdk.resp.TradePayOrderResponse;
-import com.payermax.sdk.resp.TradeQueryResponse;
+import com.payermax.sdk.req.*;
+import com.payermax.sdk.resp.*;
 import com.payermax.sdk.utils.RsaUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -30,7 +24,7 @@ public class SdkTest {
 
     private static PayermaxClient client;
 
-//    @BeforeClass
+    @BeforeClass
     public static void init() {
         client = DefaultPayermaxClient.getInstance();
         client.setEnv(Env.UAT);
@@ -91,20 +85,12 @@ public class SdkTest {
         System.out.println(data);
     }
 
-//    @Test(testName = "test use default merchant config and use common api mode")
+    @Test(testName = "test use default merchant config and use common api mode")
     public void testUseDefaultMerchantConfig2() {
-        TradeOrderRequest request = new TradeOrderRequest();
-        request.setOutTradeNo("out41254125412");
-        request.setSubject("this is subject");
-        request.setTotalAmount("10000");
-        request.setCurrency("IDR");
-        request.setCountry("ID");
-        request.setUserId("test userId");
-        // set the other information
-        // request.setLanguage();
-        // ......
+        String json = "{\"outTradeNo\":\"out1254125412\",\"subject\":\"this is subject\",\"totalAmount\":\"10000\",\"currency\":\"IDR\",\"country\":\"ID\",\"userId\":\"userId\",\"language\":\"\",\"reference\":\"\",\"frontCallbackURL\":\"http://www.qq2ddsdfsadfsdfsd.com\",\"notifyUrl\":\"http://www.noticddddasdfasdfe.com\",\"goodsDetails\":[{\"goodsId\":\"D002\",\"goodsName\":\"韩版修身牛仔裤男\",\"quantity\":\"2\",\"price\":\"500\",\"goodsCurrency\":\"IDR\",\"showUrl\":\"http://xxxx.light.png\"}],\"shippingInfo\":{\"firstName\":\"zhang\",\"middleName\":\"shang\",\"lastName\":\"feng\",\"phoneNo\":\"13009090980\",\"email\":\"bacde@ushareit.com\",\"address1\":\"二仙桥\",\"address2\":\"成华大道\",\"city\":\"成都市\",\"region\":\"武侯区\",\"state\":\"州\",\"country\":\"ID\",\"zipCode\":\"000000\"},\"billingInfo\":{\"firstName\":\"账单各\",\"middleName\":\"账单中间名\",\"lastName\":\"账单姓\",\"email\":\"abse@ushareit.com\",\"phone\":\"182927192799\",\"address1\":\"账单地址1\",\"address2\":\"账单地址2\",\"city\":\"账单地址所在城市\",\"region\":\"账单地址所在区域\",\"state\":\"账单地址所在州\",\"country\":\"地址\",\"zipCode\":\"710603\"}}";
+        OrderAndPayRequest request = JSON.parseObject(json, OrderAndPayRequest.class);
 
-        GatewayResult<TradePayOrderResponse> resp = request.send();
+        GatewayResult<OrderAndPayResponse> resp = request.send();
         System.out.println(resp);
 
     }

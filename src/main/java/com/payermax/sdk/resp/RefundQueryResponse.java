@@ -1,47 +1,53 @@
 package com.payermax.sdk.resp;
 
 import java.io.Serializable;
-import java.math.BigDecimal;
 
 /**
- * @author raoxw
+ * 退款查询 - 响应
  **/
 public class RefundQueryResponse implements Serializable {
-    private static final long serialVersionUID = -345588528576865187L;
+
+    private static final long serialVersionUID = 1L;
 
     /**
-     * 退款申请号
+     * 商户退款申请号	
      */
     private String outRefundNo;
 
     /**
-     * 商户订单号
+     * 原商户订单号	
      */
     private String outTradeNo;
 
     /**
-     * 退款交易单号
+     * 退款币种（原交易币种）	
+     */
+    private String refundCurrency;
+
+    /**
+     * PayerMax退款流水号	
      */
     private String refundTradeNo;
 
     /**
-     * 退款状态
+     * 退款完成时间
+     */
+    private String refundFinishTime;
+
+    /**
+     * 退款金额，金额的单位为元。	
+     */
+    private Long refundAmount;
+
+    /**
+     * 退款单状态，详见【[退款状态](https://docs-v2.payermax.com/doc-center/acquiring/start-integration/related-capabilities/refund.html#_4-2-%E8%8E%B7%E5%8F%96%E9%80%80%E6%AC%BE%E7%BB%93%E6%9E%9C)】	
      */
     private String status;
 
     /**
-     * 交易状态结果描述
+     * 交易状态结果描述，仅失败时有值	
      */
     private String resultMsg;
-
-    /**
-     * 退款金额
-     */
-    private BigDecimal refundAmount;
-    /**
-     * 退款币种
-     */
-    private String refundCurrency;
 
     public String getOutRefundNo() {
         return outRefundNo;
@@ -59,12 +65,36 @@ public class RefundQueryResponse implements Serializable {
         this.outTradeNo = outTradeNo;
     }
 
+    public String getRefundCurrency() {
+        return refundCurrency;
+    }
+
+    public void setRefundCurrency(String refundCurrency) {
+        this.refundCurrency = refundCurrency;
+    }
+
     public String getRefundTradeNo() {
         return refundTradeNo;
     }
 
     public void setRefundTradeNo(String refundTradeNo) {
         this.refundTradeNo = refundTradeNo;
+    }
+
+    public String getRefundFinishTime() {
+        return refundFinishTime;
+    }
+
+    public void setRefundFinishTime(String refundFinishTime) {
+        this.refundFinishTime = refundFinishTime;
+    }
+
+    public Long getRefundAmount() {
+        return refundAmount;
+    }
+
+    public void setRefundAmount(Long refundAmount) {
+        this.refundAmount = refundAmount;
     }
 
     public String getStatus() {
@@ -83,19 +113,4 @@ public class RefundQueryResponse implements Serializable {
         this.resultMsg = resultMsg;
     }
 
-    public BigDecimal getRefundAmount() {
-        return refundAmount;
-    }
-
-    public void setRefundAmount(BigDecimal refundAmount) {
-        this.refundAmount = refundAmount;
-    }
-
-    public String getRefundCurrency() {
-        return refundCurrency;
-    }
-
-    public void setRefundCurrency(String refundCurrency) {
-        this.refundCurrency = refundCurrency;
-    }
 }
