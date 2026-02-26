@@ -16,7 +16,7 @@ public class PaymentFieldValidationRequest extends BaseRequest<PaymentFieldValid
     private static final long serialVersionUID = 1L;
 
     /**
-     * 国家代码，大写字母，参见【[支持的国家与币种](https://docs.payermax.com/doc-center/appendix/disbursement/supported-country-region-currency.html)】
+     * 国家代码，大写字母，参见支持的国家与币种
      */
     private String country;
 
@@ -36,7 +36,7 @@ public class PaymentFieldValidationRequest extends BaseRequest<PaymentFieldValid
     private String purpose;
 
     /**
-     * 枚举值为：SWIFT, SEPA, LOCAL，分别对应签约的SWIFT、SEPA、Local Banks支付方式，请根据实际要用的支付方式来上送，请参照《[付款申请模板及填写规范](https://docs-v2.payermax.com/doc-center/appendix/disbursement/disbursement-application-template.html)》
+     * 枚举值为：SWIFT, SEPA, LOCAL，分别对应签约的SWIFT、SEPA、Local Banks支付方式，请根据实际要用的支付方式来上送，请参照《付款申请模板及填写规范 (https://docs-v2.payermax.com/doc-center/appendix/disbursement/disbursement-application-template.html)》
      */
     private String clearingRail;
 
@@ -46,7 +46,7 @@ public class PaymentFieldValidationRequest extends BaseRequest<PaymentFieldValid
     private PayeeInfo payeeInfo;
 
     /**
-     * 到账币种，请参考【[支付方式列表](https://docs.payermax.com/doc-center/disbursement/payment-method-list/southeast-asia.html)】，如有标明到账币种的，需要指定到账币种；若未标明，则到账币种仅支持本币，不需要进行指定
+     * 到账币种，请参考支付方式列表，如有标明到账币种的，需要指定到账币种；若未标明，则到账币种仅支持本币，不需要进行指定
      */
     private String destinationCurrency;
 
@@ -71,7 +71,7 @@ public class PaymentFieldValidationRequest extends BaseRequest<PaymentFieldValid
     private String notifyPhone;
 
     /**
-     * 费用承担模式，是否必传参照《[付款申请模板及填写规范](https://docs-v2.payermax.com/doc-center/appendix/disbursement/disbursement-application-template.html)》
+     * 费用承担模式，是否必传参照《付款申请模板及填写规范 (https://docs-v2.payermax.com/doc-center/appendix/disbursement/disbursement-application-template.html)》
      */
     private String chargeOption;
 
@@ -298,7 +298,7 @@ public class PaymentFieldValidationRequest extends BaseRequest<PaymentFieldValid
         private String birthDate;
 
         /**
-         * 目标机构，参见【[支付方式类型及目标机构说明](https://docs-v2.payermax.com/doc-center/disbursement/introduction.html#_3-%E6%94%AF%E4%BB%98%E6%96%B9%E5%BC%8F%E7%B1%BB%E5%9E%8B%E5%8F%8A%E6%9C%BA%E6%9E%84%E8%AF%B4%E6%98%8E)】
+         * 目标机构，参见支付方式类型及目标机构说明
          */
         private String targetOrg;
 
@@ -323,7 +323,7 @@ public class PaymentFieldValidationRequest extends BaseRequest<PaymentFieldValid
         private String payeeType;
 
         /**
-         * 支付方式，参见【[支付方式类型及目标机构说明](https://docs-v2.payermax.com/doc-center/disbursement/introduction.html#_3-%E6%94%AF%E4%BB%98%E6%96%B9%E5%BC%8F%E7%B1%BB%E5%9E%8B%E5%8F%8A%E6%9C%BA%E6%9E%84%E8%AF%B4%E6%98%8E)】
+         * 支付方式，参见支付方式类型及目标机构说明
          */
         private String paymentMethodType;
 
@@ -500,7 +500,7 @@ public class PaymentFieldValidationRequest extends BaseRequest<PaymentFieldValid
         private static final long serialVersionUID = 1L;
 
         /**
-         * 用于识别特定金融机构下的收款方银行代码，在不同国家下填写规范不同，参见【[付款申请模板及填写规范](https://docs-server-sg.payermax.com/server/../Public/Uploads/2023-09-14/New_API_field_specification.xlsx)】以及【[支持银行范围列表](https://docs-server-sg.payermax.com/Public/Uploads/2023-02-01/%E9%93%B6%E8%A1%8C%E5%88%97%E8%A1%A8%2020230201new.xlsx)】
+         * 用于识别特定金融机构下的收款方银行代码，在不同国家下填写规范不同，参见付款申请模板及填写规范以及支持银行范围列表
          */
         private String bankCode;
 
@@ -633,7 +633,7 @@ public class PaymentFieldValidationRequest extends BaseRequest<PaymentFieldValid
         private static final long serialVersionUID = 1L;
 
         /**
-         * 收款方个人身份证明类型，在不同国家下可选类型不同，参见《[付款申请模板及填写规范](https://img-cdn-sg.payermax.com/public/20240402-57418710-d8d2-41ad-a613-6b81922ee119.xlsx)》
+         * 收款方个人身份证明类型，在不同国家下可选类型不同，参见《付款申请模板及填写规范 (https://img-cdn-sg.payermax.com/public/20240402-57418710-d8d2-41ad-a613-6b81922ee119.xlsx)》
          */
         private String documentType;
 
@@ -643,7 +643,7 @@ public class PaymentFieldValidationRequest extends BaseRequest<PaymentFieldValid
         private String documentIssueDate;
 
         /**
-         * 收款方个人识别号码，在不同国家下可选类型不同，参见《[付款申请模板及填写规范](https://img-cdn-sg.payermax.com/public/20240402-57418710-d8d2-41ad-a613-6b81922ee119.xlsx)》
+         * 收款方个人识别号码，在不同国家下可选类型不同，参见《付款申请模板及填写规范 (https://img-cdn-sg.payermax.com/public/20240402-57418710-d8d2-41ad-a613-6b81922ee119.xlsx)》
          */
         private String documentId;
 

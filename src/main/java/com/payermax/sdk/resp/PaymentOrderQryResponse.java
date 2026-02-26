@@ -55,12 +55,12 @@ public class PaymentOrderQryResponse implements Serializable {
     private String notifyPhone;
 
     /**
-     * 交易子状态, 当订单交易状态为PENDING时，PayerMax将提供子状态，展示交易处理进度，具体枚举值请参考：【[交易子状态介绍](https://docs-v2.payermax.com/doc-center/appendix/disbursement/transaction-status.html)】。未返回可联系技术支持升级。
+     * 交易子状态, 当订单交易状态为PENDING时，PayerMax将提供子状态，展示交易处理进度，具体枚举值请参考：交易子状态介绍。未返回可联系技术支持升级。
      */
     private String subStatus;
 
     /**
-     * 订单失败错误码，详见【[错误码](https://docs-v2.payermax.com/doc-center/appendix/disbursement/transaction-status.html#_2-%E9%94%99%E8%AF%AF%E7%A0%81)】
+     * 订单失败错误码，详见错误码
      */
     private String responseCode;
 

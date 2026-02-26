@@ -42,7 +42,7 @@ public class ApplyDDCRequest extends BaseRequest<ApplyDDCResponse> implements Se
     private Long paymentAmount;
 
     /**
-     * 商户内部的用户Id，<span style="color:red">需要保证每个ID唯一性</span>。
+     * 商户内部的用户Id，&lt;span style="color:red"&gt;需要保证每个ID唯一性&lt;/span&gt;。
      */
     private String userId;
 

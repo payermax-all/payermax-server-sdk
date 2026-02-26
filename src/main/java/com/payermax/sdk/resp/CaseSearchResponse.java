@@ -80,7 +80,7 @@ public class CaseSearchResponse implements Serializable {
     private String tradeToken;
 
     /**
-     * [案件状态](https://docs.payermax.com/doc-center/receipt/chargeback/response-code.html)
+     * 案件状态 (https://docs.payermax.com/doc-center/receipt/chargeback/response-code.html)
      */
     private String status;
 

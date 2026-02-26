@@ -357,6 +357,70 @@ public class OpenApiCodeGenerator {
     }
 
     /**
+     * 转义 HTML 特殊字符（用于 Javadoc 注释）
+     * 同时处理各种特殊格式：
+     * - Markdown 链接：[文本](url) -> 文本 (url)
+     * - 带书名号的链接：【[文本](url)】 -> 文本 (url)
+     */
+    private static String escapeHtml(String text) {
+        if (text == null) {
+            return null;
+        }
+
+        // 使用更健壮的方式处理 Markdown 链接
+        StringBuilder result = new StringBuilder();
+        int i = 0;
+        while (i < text.length()) {
+            char c = text.charAt(i);
+
+            // 检测带书名号的 Markdown 链接：【[文本](url)】 -> 只保留文本
+            if (c == '【' && i + 1 < text.length() && text.charAt(i + 1) == '[') {
+                int linkEnd = text.indexOf("】", i + 2);
+                if (linkEnd > 0) {
+                    String innerLink = text.substring(i, linkEnd);
+                    int urlStart = innerLink.indexOf("](");
+                    if (urlStart > 0) {
+                        String temp = innerLink.substring(urlStart + 2);
+                        int urlEnd = temp.indexOf(')');
+                        if (urlEnd > 0) {
+                            // 只提取链接文本，不包含 URL
+                            String linkText = innerLink.substring(2, urlStart);
+                            result.append(linkText);
+                            i = linkEnd + 1;
+                            continue;
+                        }
+                    }
+                }
+            }
+
+            // 检测普通 Markdown 链接：[文本](url)
+            if (c == '[') {
+                int urlStart = text.indexOf("](", i + 1);
+                if (urlStart > 0) {
+                    int urlEnd = text.indexOf(')', urlStart + 2);
+                    if (urlEnd > 0) {
+                        String linkText = text.substring(i + 1, urlStart);
+                        String url = text.substring(urlStart + 2, urlEnd);
+                        result.append(linkText).append(" (").append(url).append(")");
+                        i = urlEnd + 1;
+                        continue;
+                    }
+                }
+            }
+
+            result.append(c);
+            i++;
+        }
+
+        text = result.toString();
+
+        // 转义 HTML 特殊字符（注意顺序：& 必须先替换）
+        return text.replace("&", "&amp;")
+                   .replace("<", "&lt;")
+                   .replace(">", "&gt;");
+    }
+
+    /**
      * 生成请求类代码
      */
     private static String generateRequestClass(ApiInfo api) {
@@ -385,13 +449,13 @@ public class OpenApiCodeGenerator {
         }
         code.append("\n");
         code.append("/**\n");
-        code.append(" * ").append(api.summary).append("\n");
+        code.append(" * ").append(escapeHtml(api.summary)).append("\n");
         if (api.description != null && !api.description.isEmpty()) {
             String desc = api.description.length() > 100 ? api.description.substring(0, 100) + "..." : api.description;
-            code.append(" * ").append(desc).append("\n");
+            code.append(" * ").append(escapeHtml(desc)).append("\n");
         }
         code.append(" *\n");
-        code.append(" * API 路径: ").append(api.path).append("\n");
+        code.append(" * API 路径: ").append(escapeHtml(api.path)).append("\n");
         code.append(" * 请求方法: ").append(api.method).append("\n");
         code.append(" **/\n");
         code.append("public class ").append(className).append(" extends BaseRequest<").append(respClassName).append("> implements Serializable {\n");
@@ -417,7 +481,7 @@ public class OpenApiCodeGenerator {
                 javaType = mapTypeToJava(prop.type);
             }
             code.append("    /**\n");
-            code.append("     * ").append(prop.description != null ? prop.description : "").append("\n");
+            code.append("     * ").append(prop.description != null ? escapeHtml(prop.description) : "").append("\n");
             code.append("     */\n");
             // 字段名直接使用 API 文档中的原始名称
             code.append("    private ").append(javaType).append(" ").append(prop.name).append(";\n");
@@ -575,7 +639,7 @@ public class OpenApiCodeGenerator {
                 javaType = mapTypeToJava(prop.type);
             }
             code.append("        /**\n");
-            code.append("         * ").append(prop.description != null ? prop.description : "").append("\n");
+            code.append("         * ").append(prop.description != null ? escapeHtml(prop.description) : "").append("\n");
             code.append("         */\n");
             // 字段名直接使用 API 文档中的原始名称
             code.append("        private ").append(javaType).append(" ").append(prop.name).append(";\n");
@@ -645,7 +709,7 @@ public class OpenApiCodeGenerator {
         }
         code.append("\n");
         code.append("/**\n");
-        code.append(" * ").append(api.summary).append(" - 响应\n");
+        code.append(" * ").append(escapeHtml(api.summary)).append(" - 响应\n");
         code.append(" **/\n");
         code.append("public class ").append(className).append(" implements Serializable {\n");
         code.append("\n");
@@ -670,7 +734,7 @@ public class OpenApiCodeGenerator {
                 javaType = mapTypeToJava(prop.type);
             }
             code.append("    /**\n");
-            code.append("     * ").append(prop.description != null ? prop.description : "").append("\n");
+            code.append("     * ").append(prop.description != null ? escapeHtml(prop.description) : "").append("\n");
             code.append("     */\n");
             // 字段名直接使用 API 文档中的原始名称
             code.append("    private ").append(javaType).append(" ").append(prop.name).append(";\n");

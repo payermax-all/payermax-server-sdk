@@ -17,7 +17,7 @@ public class CreatePaybylinkRequest extends BaseRequest<CreatePaybylinkResponse>
     private static final long serialVersionUID = 1L;
 
     /**
-     * 国家代码，大写字母，如果所传的国家代码与币种不匹配，则以货币代码对应的地区展示收银台。国家上送参见【[交易支持国家/地区与币种](https://docs-v2.payermax.com/doc-center/appendix/collection/supported-country-region-currency.html)】
+     * 国家代码，大写字母，如果所传的国家代码与币种不匹配，则以货币代码对应的地区展示收银台。国家上送参见交易支持国家/地区与币种
      */
     private String country;
 
@@ -77,7 +77,7 @@ public class CreatePaybylinkRequest extends BaseRequest<CreatePaybylinkResponse>
     private String linkType;
 
     /**
-     * 标价币种，大写字母，参见【[交易支持国家/地区与币种](https://docs-v2.payermax.com/doc-center/appendix/collection/supported-country-region-currency.html)】
+     * 标价币种，大写字母，参见交易支持国家/地区与币种
      */
     private String currency;
 
@@ -245,7 +245,7 @@ public class CreatePaybylinkRequest extends BaseRequest<CreatePaybylinkResponse>
         private String showUrl;
 
         /**
-         * 商品报价币种，大写字母。参见【[交易支持国家/地区与币种](https://docs-v2.payermax.com/doc-center/appendix/collection/supported-country-region-currency.html)】
+         * 商品报价币种，大写字母。参见交易支持国家/地区与币种
          */
         private String goodsCurrency;
 

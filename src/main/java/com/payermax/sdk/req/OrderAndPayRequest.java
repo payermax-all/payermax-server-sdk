@@ -19,26 +19,26 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
     private static final long serialVersionUID = 1L;
 
     /**
-     * 国家代码，大写字母，参见【[交易支持国家/地区与币种](https://docs-v2.payermax.com/doc-center/appendix/collection/supported-country-region-currency.html)】。
+     * 国家代码，大写字母，参见交易支持国家/地区与币种。
 如指定了paymentMethodType，则国家代码必须上送且和支付方式对应国家匹配。
-收银台可用国家地区选择策略为：上送国家代码地区>用户历史使用国家代码地区>用户IP所在国家代码地区。（可用国家地区：交易币种对应的国家与签约国家取交集）
+收银台可用国家地区选择策略为：上送国家代码地区&gt;用户历史使用国家代码地区&gt;用户IP所在国家代码地区。（可用国家地区：交易币种对应的国家与签约国家取交集）
 
      */
     private String country;
 
     /**
-     * 详见风控业务数据【[商户上送信息](https://docs-v2.payermax.com/doc-center/receipt/risk-control/information.html)】
+     * 详见风控业务数据商户上送信息
      */
     private Object riskParams;
 
     /**
-     * 商品信息，支持传多个。<span style="color:red">注：电商场景下需要上送。如果传入该对象，则内层必填字段必须传入</span>
+     * 商品信息，支持传多个。&lt;span style="color:red"&gt;注：电商场景下需要上送。如果传入该对象，则内层必填字段必须传入&lt;/span&gt;
 
      */
     private List<GoodsDetails> goodsDetails;
 
     /**
-     * 商户指定的跳转URL，用户完成支付后会被跳转到该地址，以http/https开头或者商户应用的scheme地址。详见【[结果页跳转说明](https://docs.payermax.com/doc-center/receipt/result-notifications/back-to-prev-page.html)】
+     * 商户指定的跳转URL，用户完成支付后会被跳转到该地址，以http/https开头或者商户应用的scheme地址。详见结果页跳转说明
      */
     private String frontCallbackUrl;
 
@@ -53,18 +53,18 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
     private SubscriptionPlan subscriptionPlan;
 
     /**
-     * 邮寄信息 <span style="color:red">注：电商场景下需要上送。如果传入该对象，则内层必填字段必须传入</span>
+     * 邮寄信息 &lt;span style="color:red"&gt;注：电商场景下需要上送。如果传入该对象，则内层必填字段必须传入&lt;/span&gt;
      */
     private ShippingInfo shippingInfo;
 
     /**
-     * 收银台页面语言。【[支持的国家与币种](https://docs-v2.payermax.com/doc-center/history-versions/appendix/payment/disbursement-country-region-currency.html)】
-优先级：用户上次使用的语言 > 用户浏览器语言 > 用户ip国家语言 > 商户下单传的语言 > 默认EN
+     * 收银台页面语言。支持的国家与币种
+优先级：用户上次使用的语言 &gt; 用户浏览器语言 &gt; 用户ip国家语言 &gt; 商户下单传的语言 &gt; 默认EN
      */
     private String language;
 
     /**
-     * 商户内部的用户Id，<span style="color:red">需要保证每个ID唯一性</span>。支付方式绑定后会根据userId进行支付方式推荐
+     * 商户内部的用户Id，&lt;span style="color:red"&gt;需要保证每个ID唯一性&lt;/span&gt;。支付方式绑定后会根据userId进行支付方式推荐
      */
     private String userId;
 
@@ -79,12 +79,12 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
     private String reference;
 
     /**
-     * 标价金额，金额的单位为元。各个国家币种支持的小数位详见【[交易支持国家/地区与币种](https://docs-v2.payermax.com/doc-center/appendix/collection/supported-country-region-currency.html)】,风控限额详见【[风控行业限额](https://docs-v2.payermax.com/doc-center/receipt/risk-control/limit.html)】
+     * 标价金额，金额的单位为元。各个国家币种支持的小数位详见交易支持国家/地区与币种,风控限额详见风控行业限额
      */
     private Long totalAmount;
 
     /**
-     * 信用卡账单信息。<span style="color:red">注：如果传入该对象，则内层必填字段必须传入</span>
+     * 信用卡账单信息。&lt;span style="color:red"&gt;注：如果传入该对象，则内层必填字段必须传入&lt;/span&gt;
      */
     private BillingInfo billingInfo;
 
@@ -126,7 +126,7 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
     private String authorizationType;
 
     /**
-     * 服务端回调通知URL，以http/https开头 可以通过MerchantDashboard平台配置商户通知地址，详情见【[配置异步通知地址](https://docs-v2.payermax.com/doc-center/developer/config-settings.html)】，如果交易中上送，则以交易为准，即优先使用接口中传的url。<span style="color:red">注：如商户平台未配置通知地址，交易也没上送地址，则无法进行回调通知</span>
+     * 服务端回调通知URL，以http/https开头 可以通过MerchantDashboard平台配置商户通知地址，详情见配置异步通知地址，如果交易中上送，则以交易为准，即优先使用接口中传的url。&lt;span style="color:red"&gt;注：如商户平台未配置通知地址，交易也没上送地址，则无法进行回调通知&lt;/span&gt;
      */
     private String notifyUrl;
 
@@ -136,7 +136,7 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
     private String captureMode;
 
     /**
-     * 标价币种，大写字母，参见【[交易支持国家/地区与币种](https://docs-v2.payermax.com/doc-center/appendix/collection/supported-country-region-currency.html)】
+     * 标价币种，大写字母，参见交易支持国家/地区与币种
      */
     private String currency;
 
@@ -350,17 +350,17 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
         private String price;
 
         /**
-         * 商品类别。<span style="color:red">注：电商场景下需要上送</span>
+         * 商品类别。&lt;span style="color:red"&gt;注：电商场景下需要上送&lt;/span&gt;
          */
         private String goodsCategory;
 
         /**
-         * 商品链接地址。<span style="color:red">注：电商场景下需要上送</span>
+         * 商品链接地址。&lt;span style="color:red"&gt;注：电商场景下需要上送&lt;/span&gt;
          */
         private String showUrl;
 
         /**
-         * 商品报价币种，大写字母，参见【[交易支持国家/地区与币种](https://docs-v2.payermax.com/doc-center/appendix/collection/supported-country-region-currency.html)】
+         * 商品报价币种，大写字母，参见交易支持国家/地区与币种
          */
         private String goodsCurrency;
 
@@ -804,7 +804,7 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
         private static final long serialVersionUID = 1L;
 
         /**
-         * 目标机构，可以为空，如果指定目标机构，则paymentMethodType也必须指定。参见【[收银台支付-支付方式列表](https://docs-v2.payermax.com/doc-center/receipt/cashier/payment-method/southeast-asia.html)】	
+         * 目标机构，可以为空，如果指定目标机构，则paymentMethodType也必须指定。参见收银台支付-支付方式列表	
          */
         private String targetOrg;
 
@@ -819,7 +819,7 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
         private String paymentTokenID;
 
         /**
-         * 支付账号，当指定支付方式和目标机构时，支持上送用户在该目标机构的支付账号信息。参见【[收银台支付-支付方式列表](https://docs-v2.payermax.com/doc-center/receipt/cashier/payment-method/southeast-asia.html)】下的支持上送账号类型列
+         * 支付账号，当指定支付方式和目标机构时，支持上送用户在该目标机构的支付账号信息。参见收银台支付-支付方式列表下的支持上送账号类型列
          */
         private List<PayAccountInfo> payAccountInfo;
 
@@ -829,7 +829,7 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
         private String mitType;
 
         /**
-         * 支付方式类型，为空时，拉取所有可用支付方式，参见【[收银台支付-支付方式列表](https://docs-v2.payermax.com/doc-center/receipt/cashier/payment-method/southeast-asia.html)】
+         * 支付方式类型，为空时，拉取所有可用支付方式，参见收银台支付-支付方式列表
          */
         private String paymentMethodType;
 

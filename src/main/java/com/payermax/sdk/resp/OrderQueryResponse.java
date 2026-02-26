@@ -96,7 +96,7 @@ public class OrderQueryResponse implements Serializable {
     private String confirmPayTime;
 
     /**
-     * 交易状态，详见【[交易状态](https://docs-v2.payermax.com/doc-center/appendix/collection/transaction-status.html)】
+     * 交易状态，详见交易状态
      */
     private String status;
 
@@ -344,12 +344,12 @@ public class OrderQueryResponse implements Serializable {
         private String payCurrency;
 
         /**
-         * 绑卡支付场景下，用于支付的授权ID，默认有效期为卡有效期，可通过【[removePaymentToken](https://docs.payermax.com/api.html?docName=New%20Version&docVer=v1.0&docLang=cn#/paths/aggregate-pay-api-gateway-removePaymentToken/post)】接口置为无效。
+         * 绑卡支付场景下，用于支付的授权ID，默认有效期为卡有效期，可通过removePaymentToken接口置为无效。
          */
         private String paymentTokenID;
 
         /**
-         * 支付方式类型，参见【[收银台支付-支付方式类型](https://docs.payermax.com/doc-center/receipt/cashier/payment-method/southeast-asia.html)】。
+         * 支付方式类型，参见收银台支付-支付方式类型。
          */
         private String paymentMethodType;
 
@@ -453,7 +453,7 @@ public class OrderQueryResponse implements Serializable {
         private String country;
 
         /**
-         * 绑卡支付场景下，用于支付的授权ID，默认有效期为卡有效期，可通过【[removePaymentToken](https://docs.payermax.com/api.html?docName=New%20Version&docVer=v1.0&docLang=cn#/paths/aggregate-pay-api-gateway-removePaymentToken/post)】接口置为无效。
+         * 绑卡支付场景下，用于支付的授权ID，默认有效期为卡有效期，可通过removePaymentToken接口置为无效。
          */
         private String paymentTokenID;
 

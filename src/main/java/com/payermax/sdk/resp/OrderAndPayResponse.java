@@ -25,7 +25,7 @@ public class OrderAndPayResponse implements Serializable {
     private String tradeToken;
 
     /**
-     * 交易状态，详见【[交易状态](https://docs-v2.payermax.com/doc-center/appendix/collection/transaction-status.html)】
+     * 交易状态，详见交易状态
      */
     private String status;
 

@@ -21,7 +21,7 @@ public class AddOrDelRiskNameListRequest extends BaseRequest<AddOrDelRiskNameLis
     private String nameType;
 
     /**
-     * 长度 <=128 唯一标识商户的一笔请求，不能重复
+     * 长度 &lt;=128 唯一标识商户的一笔请求，不能重复
      */
     private String requestId;
 
@@ -31,12 +31,12 @@ public class AddOrDelRiskNameListRequest extends BaseRequest<AddOrDelRiskNameLis
     private String operateType;
 
     /**
-     * 长度<=2000
+     * 长度&lt;=2000
      */
     private List<NameList> nameList;
 
     /**
-     * 长度 <=128
+     * 长度 &lt;=128
      */
     private String remark;
 
@@ -96,7 +96,7 @@ public class AddOrDelRiskNameListRequest extends BaseRequest<AddOrDelRiskNameLis
         private String expireType;
 
         /**
-         * 长度<=128 名单类型为NEG0001时 示例：123456-4321  名单类型为NEG0005时，国家代码，大写字母，参见【[交易支持国家/地区与币种](https://docs.payermax.com/#/30?page_id=677)】
+         * 长度&lt;=128 名单类型为NEG0001时 示例：123456-4321  名单类型为NEG0005时，国家代码，大写字母，参见交易支持国家/地区与币种
          */
         private String value;
 

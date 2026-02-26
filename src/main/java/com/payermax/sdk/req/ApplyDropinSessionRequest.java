@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Apply Drop-in Session
  * 在商户服务端调用该接口，获取用于初始化前置组件的主要参数。
-> 注：商户如果有换汇或营销的诉求，可联系PayerMax技术支持。
+&gt; 注：商户如果有换汇或营销的诉求，可联系PayerMax技术支持。
  *
  * API 路径: /aggregate-pay/api/gateway/applyDropinSession
  * 请求方法: POST
@@ -23,7 +23,7 @@ public class ApplyDropinSessionRequest extends BaseRequest<ApplyDropinSessionRes
     private String totalAmount;
 
     /**
-     * 国家代码，大写字母，参见【交易支持国家/地区与币种】。 如指定了paymentMethodType，则国家代码必须上送且和支付方式对应国家匹配。 收银台可用国家地区选择策略为：上送国家代码地区>用户历史使用国家代码地区>用户IP所在国家代码地区。（可用国家地区：交易币种对应的国家与签约国家取交集）
+     * 国家代码，大写字母，参见【交易支持国家/地区与币种】。 如指定了paymentMethodType，则国家代码必须上送且和支付方式对应国家匹配。 收银台可用国家地区选择策略为：上送国家代码地区&gt;用户历史使用国家代码地区&gt;用户IP所在国家代码地区。（可用国家地区：交易币种对应的国家与签约国家取交集）
      */
     private String country;
 

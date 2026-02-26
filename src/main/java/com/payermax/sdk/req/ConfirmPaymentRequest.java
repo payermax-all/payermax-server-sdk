@@ -16,7 +16,7 @@ public class ConfirmPaymentRequest extends BaseRequest<ConfirmPaymentResponse> i
     private static final long serialVersionUID = 1L;
 
     /**
-     * 退款回调地址，可后台配置【[配置地址](https://docs-v2.payermax.com/doc-center/developer/config-settings.html)】
+     * 退款回调地址，可后台配置配置地址
      */
     private PaymentDetail paymentDetail;
 

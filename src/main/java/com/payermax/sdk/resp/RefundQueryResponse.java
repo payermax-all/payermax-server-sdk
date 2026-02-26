@@ -40,7 +40,7 @@ public class RefundQueryResponse implements Serializable {
     private Long refundAmount;
 
     /**
-     * 退款单状态，详见【[退款状态](https://docs-v2.payermax.com/doc-center/acquiring/start-integration/related-capabilities/refund.html#_4-2-%E8%8E%B7%E5%8F%96%E9%80%80%E6%AC%BE%E7%BB%93%E6%9E%9C)】	
+     * 退款单状态，详见退款状态	
      */
     private String status;
 

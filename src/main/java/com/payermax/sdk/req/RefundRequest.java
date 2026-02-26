@@ -47,7 +47,7 @@ public class RefundRequest extends BaseRequest<RefundResponse> implements Serial
     private Long refundAmount;
 
     /**
-     * 退款回调地址，可后台配置【[配置地址](https://docs-v2.payermax.com/doc-center/developer/config-settings.html)】
+     * 退款回调地址，可后台配置配置地址
      */
     private String refundNotifyUrl;
 

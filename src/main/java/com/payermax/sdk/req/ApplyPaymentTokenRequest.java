@@ -30,7 +30,7 @@ public class ApplyPaymentTokenRequest extends BaseRequest<ApplyPaymentTokenRespo
     private String country;
 
     /**
-     * 详见风控业务数据【[商户上送信息](https://docs-v2.payermax.com/doc-center/receipt/risk-control/information.html)】
+     * 详见风控业务数据商户上送信息
      */
     private Object riskParams;
 

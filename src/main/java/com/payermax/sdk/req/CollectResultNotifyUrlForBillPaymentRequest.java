@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * 支付成功通知商户
  * 对客扣款成功后，PayerMax会自动入账并将调用该接口通知商户入账结果，商户可仅响应code和msg，无需响应data。 
-> 注：如商户希望PayerMax先不处理入账，可联系PayerMax进行...
+&gt; 注：如商户希望PayerMax先不处理入账，可联系PayerMax进行...
  *
  * API 路径: /collectResultNotifyUrlForBillPayment
  * 请求方法: POST
