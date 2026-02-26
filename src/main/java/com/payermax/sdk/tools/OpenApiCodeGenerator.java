@@ -20,11 +20,54 @@ import java.util.*;
  */
 public class OpenApiCodeGenerator {
 
+    // ==================== 常量定义 ====================
     private static final String PROJECT_ROOT = System.getProperty("user.dir");
     private static final String OPENAPI_FILE = PROJECT_ROOT + "/api.json";
     private static final String REQ_OUTPUT_DIR = PROJECT_ROOT + "/src/main/java/com/payermax/sdk/req";
     private static final String RESP_OUTPUT_DIR = PROJECT_ROOT + "/src/main/java/com/payermax/sdk/resp";
     private static final String BASE_PACKAGE = "com.payermax.sdk";
+
+    // JSON 路径常量
+    private static final String JSON_PATH_RESPONSES = "responses";
+    private static final String JSON_RESPONSE_200 = "200";
+    private static final String JSON_CONTENT = "content";
+    private static final String JSON_APPLICATION_JSON = "application/json";
+    private static final String JSON_SCHEMA = "schema";
+    private static final String JSON_PROPERTIES = "properties";
+    private static final String JSON_DATA = "data";
+    private static final String JSON_REQUEST_BODY = "requestBody";
+    private static final String JSON_ITEMS = "items";
+    private static final String JSON_TYPE = "type";
+    private static final String JSON_DESCRIPTION = "description";
+
+    // 类名后缀常量
+    private static final String SUFFIX_REQUEST = "Request";
+    private static final String SUFFIX_RESPONSE = "Response";
+    private static final int REQUEST_SUFFIX_LENGTH = 7;
+    private static final int RESPONSE_SUFFIX_LENGTH = 8;
+
+    // 其他常量
+    private static final int MAX_DESCRIPTION_LENGTH = 100;
+    private static final String INTERFACE_NAME_CN = "接口名称：";
+    private static final String INTERFACE_NAME_EN = "接口名称:";
+    private static final int INTERFACE_NAME_PREFIX_LENGTH = 5;
+    private static final String FILE_SUFFIX_REQUEST = "Request.java";
+    private static final String FILE_SUFFIX_RESPONSE = "Response.java";
+    private static final String FILE_EXT_JAVA = ".java";
+    private static final String TYPE_ARRAY = "array";
+    private static final String TYPE_STRING = "String";
+    private static final String IMPORT_STATEMENT = "import ";
+    private static final String METHOD_CLOSING_BRACE = "    }\n\n";
+
+    // HTTP 方法集合
+    private static final Set<String> HTTP_METHODS = new HashSet<>(
+        Arrays.asList("get", "post", "put", "delete", "patch")
+    );
+
+    // 路径过滤常量
+    private static final String PATH_AGGREGATE_PAY = "aggregate-pay";
+    private static final String PATH_API = "api";
+    private static final String PATH_GATEWAY = "gateway";
 
     public static void main(String[] args) {
         try {
@@ -37,29 +80,15 @@ public class OpenApiCodeGenerator {
             List<ApiInfo> apis = parseApis(openapi);
             System.out.println("共解析到 " + apis.size() + " 个 API 接口");
 
-            // 获取已存在的请求类
-            Set<String> existingReqClasses = getExistingRequestClasses();
-            Set<String> existingRespClasses = getExistingResponseClasses();
+            // 获取已存在的类
+            Set<String> existingReqClasses = getExistingClasses(REQ_OUTPUT_DIR, FILE_SUFFIX_REQUEST);
+            Set<String> existingRespClasses = getExistingClasses(RESP_OUTPUT_DIR, FILE_SUFFIX_RESPONSE);
             System.out.println("已存在 " + existingReqClasses.size() + " 个请求类，" + existingRespClasses.size() + " 个响应类（将被覆盖）");
 
-            // 生成代码（直接覆盖已存在的类）
-            int count = 0;
-            for (ApiInfo api : apis) {
-                String className = getRequestClassName(api.apiName);
-                String respClassName = getResponseClassName(api.apiName);
+            // 生成代码
+            generateClasses(apis);
 
-                // 生成请求类（覆盖已存在的）
-                String reqCode = generateRequestClass(api);
-                writeFile(Paths.get(REQ_OUTPUT_DIR, className + ".java"), reqCode);
-
-                // 生成响应类（覆盖已存在的）
-                String respCode = generateResponseClass(api);
-                writeFile(Paths.get(RESP_OUTPUT_DIR, respClassName + ".java"), respCode);
-
-                count++;
-            }
-
-            System.out.println("\n完成！共生成 " + count + " 个新的请求类和响应类");
+            System.out.println("\n完成！共生成 " + apis.size() + " 个新的请求类和响应类");
 
         } catch (Exception e) {
             System.err.println("生成失败: " + e.getMessage());
@@ -68,11 +97,27 @@ public class OpenApiCodeGenerator {
     }
 
     /**
+     * 生成所有请求类和响应类
+     */
+    private static void generateClasses(List<ApiInfo> apis) throws IOException {
+        for (ApiInfo api : apis) {
+            String reqCode = generateRequestClass(api);
+            String respCode = generateResponseClass(api);
+
+            String reqClassName = getClassName(api.apiName, SUFFIX_REQUEST);
+            String respClassName = getClassName(api.apiName, SUFFIX_RESPONSE);
+
+            writeFile(Paths.get(REQ_OUTPUT_DIR, reqClassName + FILE_EXT_JAVA), reqCode);
+            writeFile(Paths.get(RESP_OUTPUT_DIR, respClassName + FILE_EXT_JAVA), respCode);
+        }
+    }
+
+    /**
      * 解析 API 接口信息
      */
     private static List<ApiInfo> parseApis(JSONObject openapi) {
         List<ApiInfo> apis = new ArrayList<>();
-        JSONObject paths = openapi.getJSONObject("paths");
+        JSONObject paths = openapi.getJSONObject(JSON_PROPERTIES);
 
         if (paths == null) {
             return apis;
@@ -81,24 +126,21 @@ public class OpenApiCodeGenerator {
         for (String path : paths.keySet()) {
             JSONObject methods = paths.getJSONObject(path);
             for (String method : methods.keySet()) {
-                if (!Arrays.asList("get", "post", "put", "delete", "patch").contains(method.toLowerCase())) {
+                // 跳过非 HTTP 方法
+                if (!HTTP_METHODS.contains(method.toLowerCase())) {
                     continue;
                 }
 
                 JSONObject details = methods.getJSONObject(method);
                 String summary = details.getString("summary");
-                String description = details.getString("description");
+                String description = details.getString(JSON_DESCRIPTION);
                 String apiName = extractApiName(description, path);
 
-                // 跳过回调通知类接口
-                if (apiName.endsWith("NotifyUrl") || apiName.endsWith("notifyUrl")) {
-                    continue;
-                }
-
-                // 解析请求参数
                 List<PropertyInfo> properties = extractRequestProperties(details);
-
-                apis.add(new ApiInfo(path, method.toUpperCase(), summary, apiName, properties, description, details));
+                // 只添加符合条件的 API
+                if (shouldIncludeApi(apiName)) {
+                    apis.add(new ApiInfo(path, method.toUpperCase(), summary, apiName, properties, description, details));
+                }
             }
         }
 
@@ -106,149 +148,144 @@ public class OpenApiCodeGenerator {
     }
 
     /**
+     * 判断是否应该包含该 API（过滤回调通知类接口）
+     */
+    private static boolean shouldIncludeApi(String apiName) {
+        return !apiName.endsWith("NotifyUrl") && !apiName.endsWith("notifyUrl");
+    }
+
+    /**
      * 提取 API 名称
      */
     private static String extractApiName(String description, String path) {
-        // 处理重复接口路径的情况：
-        // 1. delSuffixStart 开头：/aggregate-pay/api/gateway/orderAndPay/delSuffixStart1
-        // 2. (for-xxx) 括号：/aggregate-pay/api/gateway/orderAndPay(for-drop-dont-copy-me)
-        // 这些情况下应该使用父级路径作为 API 名称
-
         // 先尝试从描述中提取接口名称
-        String apiNameFromDesc = null;
-        if (description != null) {
-            if (description.contains("接口名称：")) {
-                String parts = description.substring(description.indexOf("接口名称：") + 5);
-                String apiName = parts.split("\\s+")[0];
-                if (!apiName.isEmpty()) {
-                    apiNameFromDesc = apiName;
-                }
-            } else if (description.contains("接口名称:")) {
-                String parts = description.substring(description.indexOf("接口名称:") + 5);
-                String apiName = parts.split("\\s+")[0];
-                if (!apiName.isEmpty()) {
-                    apiNameFromDesc = apiName;
-                }
-            }
+        String apiNameFromDesc = extractApiNameFromDescription(description);
+        if (apiNameFromDesc != null) {
+            return apiNameFromDesc;
         }
 
-        // 检查路径是否包含重复标识
+        // 从路径生成 API 名称
+        return extractApiNameFromPath(path);
+    }
+
+    /**
+     * 从描述中提取 API 名称
+     */
+    private static String extractApiNameFromDescription(String description) {
+        if (description == null) {
+            return null;
+        }
+
+        int nameIndex;
+        if (description.contains(INTERFACE_NAME_CN)) {
+            nameIndex = description.indexOf(INTERFACE_NAME_CN) + INTERFACE_NAME_PREFIX_LENGTH;
+        } else if (description.contains(INTERFACE_NAME_EN)) {
+            nameIndex = description.indexOf(INTERFACE_NAME_EN) + INTERFACE_NAME_PREFIX_LENGTH;
+        } else {
+            return null;
+        }
+
+        String parts = description.substring(nameIndex);
+        String apiName = parts.split("\\s+")[0];
+        return apiName.isEmpty() ? null : apiName;
+    }
+
+    /**
+     * 从路径中提取 API 名称
+     */
+    private static String extractApiNameFromPath(String path) {
         String[] parts = path.split("/");
         String lastPart = parts.length > 0 ? parts[parts.length - 1] : "";
 
-        // 如果路径包含重复标识，返回父级接口名称
-        if (lastPart.startsWith("delSuffixStart") ||
-            lastPart.matches("\\(for-[^)]*\\)") ||
-            lastPart.matches(".*[Dd]ont[Cc]opy[Mm]e") ||
-            lastPart.matches(".*[Cc]opy[Mm]e")) {
-
+        // 检查是否是重复标识路径
+        if (isDuplicatePath(lastPart)) {
             // 查找父级接口名称
             for (int i = parts.length - 1; i >= 0; i--) {
                 String part = parts[i];
-                if (!part.startsWith("delSuffixStart") &&
-                    !part.matches("\\(for-[^)]*\\)") &&
-                    !part.matches(".*[Dd]ont[Cc]opy[Mm]e") &&
-                    !part.matches(".*[Cc]opy[Mm]e") &&
-                    !part.isEmpty() &&
-                    !part.equals("aggregate-pay") &&
-                    !part.equals("api") &&
-                    !part.equals("gateway")) {
+                if (!isDuplicatePath(part) && !part.isEmpty() && !isSystemPath(part)) {
                     return part;
                 }
             }
         }
 
-        // 如果从描述中提取到了接口名称，优先使用
-        if (apiNameFromDesc != null) {
-            return apiNameFromDesc;
-        }
-
-        // 从路径生成 API 名称（去除括号内容）
-        if (parts.length > 0) {
-            lastPart = parts[parts.length - 1];
-            lastPart = lastPart.replaceAll("\\([^)]*\\)", "");
-            return lastPart;
-        }
-
-        return "unknownApi";
+        // 去除括号内容
+        return lastPart.replaceAll("\\([^)]*\\)", "");
     }
 
     /**
-     * 提取请求属性（只提取 data 字段内的属性），支持递归处理嵌套对象
+     * 检查是否是重复标识路径
+     */
+    private static boolean isDuplicatePath(String part) {
+        return part.startsWith("delSuffixStart")
+            || part.matches("\\(for-[^)]*\\)")
+            || part.matches(".*[Dd]ont[Cc]opy[Mm]e")
+            || part.matches(".*[Cc]opy[Mm]e");
+    }
+
+    /**
+     * 检查是否是系统路径
+     */
+    private static boolean isSystemPath(String part) {
+        return PATH_AGGREGATE_PAY.equals(part)
+            || PATH_API.equals(part)
+            || PATH_GATEWAY.equals(part);
+    }
+
+    /**
+     * 提取请求属性
      */
     private static List<PropertyInfo> extractRequestProperties(JSONObject details) {
-        return extractPropertiesFromRequest(details.getJSONObject("requestBody"));
+        return extractProperties(details.getJSONObject(JSON_REQUEST_BODY));
     }
 
     /**
-     * 提取响应属性（只提取 data 字段内的属性），支持递归处理嵌套对象
+     * 提取响应属性
      */
     private static List<PropertyInfo> extractResponseProperties(JSONObject details) {
-        JSONObject responses = details.getJSONObject("responses");
+        JSONObject responses = details.getJSONObject(JSON_PATH_RESPONSES);
         if (responses == null) {
             return new ArrayList<>();
         }
-        JSONObject response200 = responses.getJSONObject("200");
+        JSONObject response200 = responses.getJSONObject(JSON_RESPONSE_200);
         if (response200 == null) {
             return new ArrayList<>();
         }
-        return extractPropertiesFromResponse(response200);
+        return extractProperties(response200);
     }
 
     /**
-     * 从请求体中提取属性
+     * 从请求/响应体中提取属性（统一处理）
      */
-    private static List<PropertyInfo> extractPropertiesFromRequest(JSONObject requestBody) {
+    private static List<PropertyInfo> extractProperties(JSONObject requestBody) {
         if (requestBody == null) {
             return new ArrayList<>();
         }
-        JSONObject content = requestBody.getJSONObject("content");
-        if (content == null) {
-            return new ArrayList<>();
-        }
-        JSONObject schema = content.getJSONObject("application/json");
-        if (schema == null) {
-            return new ArrayList<>();
-        }
-        JSONObject schemaObj = schema.getJSONObject("schema");
-        if (schemaObj == null) {
-            return new ArrayList<>();
-        }
-        JSONObject props = schemaObj.getJSONObject("properties");
-        if (props == null) {
-            return new ArrayList<>();
-        }
-        JSONObject dataProp = props.getJSONObject("data");
-        if (dataProp == null) {
-            return new ArrayList<>();
-        }
-        return extractPropertiesFromData(dataProp);
-    }
 
-    /**
-     * 从响应中提取属性
-     */
-    private static List<PropertyInfo> extractPropertiesFromResponse(JSONObject response) {
-        JSONObject content = response.getJSONObject("content");
+        JSONObject content = requestBody.getJSONObject(JSON_CONTENT);
         if (content == null) {
             return new ArrayList<>();
         }
-        JSONObject schema = content.getJSONObject("application/json");
+
+        JSONObject schema = content.getJSONObject(JSON_APPLICATION_JSON);
         if (schema == null) {
             return new ArrayList<>();
         }
-        JSONObject schemaObj = schema.getJSONObject("schema");
+
+        JSONObject schemaObj = schema.getJSONObject(JSON_SCHEMA);
         if (schemaObj == null) {
             return new ArrayList<>();
         }
-        JSONObject props = schemaObj.getJSONObject("properties");
+
+        JSONObject props = schemaObj.getJSONObject(JSON_PROPERTIES);
         if (props == null) {
             return new ArrayList<>();
         }
-        JSONObject dataProp = props.getJSONObject("data");
+
+        JSONObject dataProp = props.getJSONObject(JSON_DATA);
         if (dataProp == null) {
             return new ArrayList<>();
         }
+
         return extractPropertiesFromData(dataProp);
     }
 
@@ -257,53 +294,76 @@ public class OpenApiCodeGenerator {
      */
     private static List<PropertyInfo> extractPropertiesFromData(JSONObject dataProp) {
         List<PropertyInfo> properties = new ArrayList<>();
-        JSONObject dataProps = dataProp.getJSONObject("properties");
+        JSONObject dataProps = dataProp.getJSONObject(JSON_PROPERTIES);
         if (dataProps == null) {
             return properties;
         }
 
         for (String propName : dataProps.keySet()) {
             JSONObject propDetails = dataProps.getJSONObject(propName);
-            String type = propDetails.getString("type");
-            String desc = propDetails.getString("description");
-            // 去除字段名前后的空格
+            String type = propDetails.getString(JSON_TYPE);
+            String desc = propDetails.getString(JSON_DESCRIPTION);
             propName = propName.trim();
 
-            // 提取数组元素的类型
-            if ("array".equals(type)) {
-                JSONObject items = propDetails.getJSONObject("items");
-                if (items != null) {
-                    String itemType = items.getString("type");
-                    // 检查是否有嵌套属性（用于生成嵌套类）
-                    JSONObject itemProps = items.getJSONObject("properties");
-                    if (itemProps != null) {
-                        // 数组元素是嵌套对象，递归提取其属性
-                        List<PropertyInfo> itemProperties = extractPropertiesFromJsonObject(itemProps);
-                        properties.add(new PropertyInfo(propName, type, desc, itemProperties));
-                        continue;
-                    } else if (itemType != null) {
-                        // 数组元素是基本类型（如 string, integer 等）
-                        properties.add(new PropertyInfo(propName, type, desc, itemType));
-                        continue;
-                    }
-                }
-            }
-
-            // 提取嵌套对象的属性
-            if ("object".equals(type)) {
-                JSONObject nestedProps = propDetails.getJSONObject("properties");
-                if (nestedProps != null) {
-                    // 嵌套对象，递归提取其属性
-                    List<PropertyInfo> nestedProperties = extractPropertiesFromJsonObject(nestedProps);
-                    properties.add(new PropertyInfo(propName, type, desc, nestedProperties));
-                    continue;
-                }
-            }
-
-            properties.add(new PropertyInfo(propName, type, desc));
+            PropertyInfo prop = createPropertyInfo(propName, type, desc, propDetails);
+            properties.add(prop);
         }
 
         return properties;
+    }
+
+    /**
+     * 创建属性信息对象
+     */
+    private static PropertyInfo createPropertyInfo(String name, String type, String desc, JSONObject propDetails) {
+        // 处理数组类型
+        if (TYPE_ARRAY.equals(type)) {
+            return createArrayPropertyInfo(name, type, desc, propDetails);
+        }
+
+        // 处理对象类型
+        if ("object".equals(type)) {
+            return createObjectPropertyInfo(name, type, desc, propDetails);
+        }
+
+        // 基本类型
+        return new PropertyInfo(name, type, desc);
+    }
+
+    /**
+     * 创建数组类型属性信息
+     */
+    private static PropertyInfo createArrayPropertyInfo(String name, String type, String desc, JSONObject propDetails) {
+        JSONObject items = propDetails.getJSONObject(JSON_ITEMS);
+        if (items == null) {
+            return new PropertyInfo(name, type, desc);
+        }
+
+        String itemType = items.getString(JSON_TYPE);
+        JSONObject itemProps = items.getJSONObject(JSON_PROPERTIES);
+
+        if (itemProps != null) {
+            // 数组元素是嵌套对象
+            List<PropertyInfo> itemProperties = extractPropertiesFromJsonObject(itemProps);
+            return new PropertyInfo(name, type, desc, itemProperties);
+        } else if (itemType != null) {
+            // 数组元素是基本类型
+            return new PropertyInfo(name, type, desc, itemType);
+        }
+
+        return new PropertyInfo(name, type, desc);
+    }
+
+    /**
+     * 创建对象类型属性信息
+     */
+    private static PropertyInfo createObjectPropertyInfo(String name, String type, String desc, JSONObject propDetails) {
+        JSONObject nestedProps = propDetails.getJSONObject(JSON_PROPERTIES);
+        if (nestedProps != null) {
+            List<PropertyInfo> nestedProperties = extractPropertiesFromJsonObject(nestedProps);
+            return new PropertyInfo(name, type, desc, nestedProperties);
+        }
+        return new PropertyInfo(name, type, desc);
     }
 
     /**
@@ -314,43 +374,14 @@ public class OpenApiCodeGenerator {
 
         for (String propName : props.keySet()) {
             JSONObject propDetails = props.getJSONObject(propName);
-            String type = propDetails.getString("type");
-            String desc = propDetails.getString("description");
-            // 去除字段名前后的空格
+            String type = propDetails.getString(JSON_TYPE);
+            String desc = propDetails.getString(JSON_DESCRIPTION);
             propName = propName.trim();
 
-            // 提取数组元素的类型
-            if ("array".equals(type)) {
-                JSONObject items = propDetails.getJSONObject("items");
-                if (items != null) {
-                    String itemType = items.getString("type");
-                    // 检查是否有嵌套属性（用于生成嵌套类）
-                    JSONObject itemProps = items.getJSONObject("properties");
-                    if (itemProps != null) {
-                        // 数组元素是嵌套对象，递归提取其属性
-                        List<PropertyInfo> itemProperties = extractPropertiesFromJsonObject(itemProps);
-                        properties.add(new PropertyInfo(propName, type, desc, itemProperties));
-                        continue;
-                    } else if (itemType != null) {
-                        // 数组元素是基本类型
-                        properties.add(new PropertyInfo(propName, type, desc, itemType));
-                        continue;
-                    }
-                }
+            PropertyInfo prop = createPropertyInfo(propName, type, desc, propDetails);
+            if (prop != null) {
+                properties.add(prop);
             }
-
-            // 提取嵌套对象的属性
-            if ("object".equals(type)) {
-                JSONObject nestedProps = propDetails.getJSONObject("properties");
-                if (nestedProps != null) {
-                    // 嵌套对象，递归提取其属性
-                    List<PropertyInfo> nestedProperties = extractPropertiesFromJsonObject(nestedProps);
-                    properties.add(new PropertyInfo(propName, type, desc, nestedProperties));
-                    continue;
-                }
-            }
-
-            properties.add(new PropertyInfo(propName, type, desc));
         }
 
         return properties;
@@ -358,63 +389,117 @@ public class OpenApiCodeGenerator {
 
     /**
      * 转义 HTML 特殊字符（用于 Javadoc 注释）
-     * 同时处理各种特殊格式：
-     * - Markdown 链接：[文本](url) -> 文本 (url)
-     * - 带书名号的链接：【[文本](url)】 -> 文本 (url)
      */
     private static String escapeHtml(String text) {
         if (text == null) {
             return null;
         }
 
-        // 使用更健壮的方式处理 Markdown 链接
+        // 处理 Markdown 链接
+        text = processMarkdownLinks(text);
+
+        // 转义 HTML 特殊字符
+        return escapeHtmlEntities(text);
+    }
+
+    /**
+     * 处理 Markdown 链接格式
+     */
+    private static String processMarkdownLinks(String text) {
         StringBuilder result = new StringBuilder();
         int i = 0;
+
         while (i < text.length()) {
             char c = text.charAt(i);
 
-            // 检测带书名号的 Markdown 链接：【[文本](url)】 -> 只保留文本
-            if (c == '【' && i + 1 < text.length() && text.charAt(i + 1) == '[') {
-                int linkEnd = text.indexOf("】", i + 2);
-                if (linkEnd > 0) {
-                    String innerLink = text.substring(i, linkEnd);
-                    int urlStart = innerLink.indexOf("](");
-                    if (urlStart > 0) {
-                        String temp = innerLink.substring(urlStart + 2);
-                        int urlEnd = temp.indexOf(')');
-                        if (urlEnd > 0) {
-                            // 只提取链接文本，不包含 URL
-                            String linkText = innerLink.substring(2, urlStart);
-                            result.append(linkText);
-                            i = linkEnd + 1;
-                            continue;
-                        }
-                    }
-                }
+            // 尝试处理链接（带书名号或普通链接）
+            int processedLength = tryProcessLink(text, i, c, result);
+            if (processedLength > 0) {
+                i += processedLength;
+            } else {
+                result.append(c);
+                i++;
             }
-
-            // 检测普通 Markdown 链接：[文本](url)
-            if (c == '[') {
-                int urlStart = text.indexOf("](", i + 1);
-                if (urlStart > 0) {
-                    int urlEnd = text.indexOf(')', urlStart + 2);
-                    if (urlEnd > 0) {
-                        String linkText = text.substring(i + 1, urlStart);
-                        String url = text.substring(urlStart + 2, urlEnd);
-                        result.append(linkText).append(" (").append(url).append(")");
-                        i = urlEnd + 1;
-                        continue;
-                    }
-                }
-            }
-
-            result.append(c);
-            i++;
         }
 
-        text = result.toString();
+        return result.toString();
+    }
 
-        // 转义 HTML 特殊字符（注意顺序：& 必须先替换）
+    /**
+     * 尝试处理链接格式
+     * @return 处理的字符长度，0 表示未处理
+     */
+    private static int tryProcessLink(String text, int start, char firstChar, StringBuilder result) {
+        // 检测带书名号的 Markdown 链接：【[文本](url)】
+        if (firstChar == '【' && hasLeftBracketAt(text, start + 1)) {
+            return processBracketedLink(text, start, result);
+        }
+
+        // 检测普通 Markdown 链接：[文本](url)
+        if (firstChar == '[') {
+            return processNormalLink(text, start, result);
+        }
+
+        return 0;
+    }
+
+    /**
+     * 处理带书名号的链接：【[文本](url)】
+     * @return 处理的字符长度，0 表示未处理
+     */
+    private static int processBracketedLink(String text, int start, StringBuilder result) {
+        int linkEnd = text.indexOf("】", start + 2);
+        if (linkEnd <= 0) {
+            return 0;
+        }
+
+        int urlStart = text.indexOf("](", start + 2);
+        if (urlStart <= 0 || urlStart >= linkEnd) {
+            return 0;
+        }
+
+        int urlEnd = text.indexOf(')', urlStart + 2);
+        if (urlEnd <= 0 || urlEnd >= linkEnd) {
+            return 0;
+        }
+
+        // 提取链接文本：从 【[ 之后到 ]( 之前
+        result.append(text.substring(start + 2, urlStart));
+        return linkEnd + 1 - start;
+    }
+
+    /**
+     * 处理普通链接：[文本](url)
+     * @return 处理的字符长度，0 表示未处理
+     */
+    private static int processNormalLink(String text, int start, StringBuilder result) {
+        int urlStart = text.indexOf("](", start + 1);
+        if (urlStart <= 0) {
+            return 0;
+        }
+
+        int urlEnd = text.indexOf(')', urlStart + 2);
+        if (urlEnd <= 0) {
+            return 0;
+        }
+
+        String linkText = text.substring(start + 1, urlStart);
+        String url = text.substring(urlStart + 2, urlEnd);
+        result.append(linkText).append(" (").append(url).append(")");
+        return urlEnd + 1 - start;
+    }
+
+    /**
+     * 检查指定位置是否有左括号
+     */
+    private static boolean hasLeftBracketAt(String text, int pos) {
+        return pos < text.length() && text.charAt(pos) == '[';
+    }
+
+    /**
+     * 转义 HTML 实体
+     */
+    private static String escapeHtmlEntities(String text) {
         return text.replace("&", "&amp;")
                    .replace("<", "&lt;")
                    .replace(">", "&gt;");
@@ -425,97 +510,34 @@ public class OpenApiCodeGenerator {
      */
     private static String generateRequestClass(ApiInfo api) {
         StringBuilder code = new StringBuilder();
-        String className = getRequestClassName(api.apiName);
-        String respClassName = getResponseClassName(api.apiName);
+        String className = getClassName(api.apiName, SUFFIX_REQUEST);
+        String respClassName = getClassName(api.apiName, SUFFIX_RESPONSE);
 
         // 收集需要导入的类型
-        Set<String> imports = new TreeSet<>();
-        imports.add("java.io.Serializable");
+        Set<String> imports = collectImports(api.properties);
 
-        // 检查是否有 List 类型
-        for (PropertyInfo prop : api.properties) {
-            if ("array".equals(prop.type)) {
-                imports.add("java.util.List");
-                break;
-            }
-        }
-
-        code.append("package ").append(BASE_PACKAGE).append(".req;\n");
-        code.append("\n");
-        code.append("import ").append(BASE_PACKAGE).append(".api.BaseRequest;\n");
-        code.append("import ").append(BASE_PACKAGE).append(".resp.").append(respClassName).append(";\n");
+        // 生成包声明和导入
+        code.append("package ").append(BASE_PACKAGE).append(".req;\n\n");
+        code.append(IMPORT_STATEMENT).append(BASE_PACKAGE).append(".api.BaseRequest;\n");
+        code.append(IMPORT_STATEMENT).append(BASE_PACKAGE).append(".resp.").append(respClassName).append(";\n");
         for (String imp : imports) {
-            code.append("import ").append(imp).append(";\n");
+            code.append(IMPORT_STATEMENT).append(imp).append(";\n");
         }
         code.append("\n");
-        code.append("/**\n");
-        code.append(" * ").append(escapeHtml(api.summary)).append("\n");
-        if (api.description != null && !api.description.isEmpty()) {
-            String desc = api.description.length() > 100 ? api.description.substring(0, 100) + "..." : api.description;
-            code.append(" * ").append(escapeHtml(desc)).append("\n");
-        }
-        code.append(" *\n");
-        code.append(" * API 路径: ").append(escapeHtml(api.path)).append("\n");
-        code.append(" * 请求方法: ").append(api.method).append("\n");
-        code.append(" **/\n");
-        code.append("public class ").append(className).append(" extends BaseRequest<").append(respClassName).append("> implements Serializable {\n");
-        code.append("\n");
-        code.append("    private static final long serialVersionUID = 1L;\n");
-        code.append("\n");
+
+        // 生成类注释
+        generateClassComment(code, api, false);
+
+        // 生成类声明
+        code.append("public class ").append(className).append(" extends BaseRequest<").append(respClassName)
+            .append("> implements Serializable {\n\n");
+        code.append("    private static final long serialVersionUID = 1L;\n\n");
 
         // 生成属性
-        for (PropertyInfo prop : api.properties) {
-            String javaType;
-            if (prop.hasNestedProperties()) {
-                String nestedClassName = toPascalCase(prop.name);
-                if ("array".equals(prop.type)) {
-                    javaType = "List<" + nestedClassName + ">";
-                } else {
-                    javaType = nestedClassName;
-                }
-            } else if (prop.hasItemType()) {
-                // 数组元素是基本类型
-                String itemJavaType = mapTypeToJava(prop.itemType);
-                javaType = "List<" + itemJavaType + ">";
-            } else {
-                javaType = mapTypeToJava(prop.type);
-            }
-            code.append("    /**\n");
-            code.append("     * ").append(prop.description != null ? escapeHtml(prop.description) : "").append("\n");
-            code.append("     */\n");
-            // 字段名直接使用 API 文档中的原始名称
-            code.append("    private ").append(javaType).append(" ").append(prop.name).append(";\n");
-            code.append("\n");
-        }
+        generateFields(code, api.properties);
 
-        // 生成 getter 和 setter
-        for (PropertyInfo prop : api.properties) {
-            String propNamePascal = toPascalCase(prop.name);
-            String javaType;
-            if (prop.hasNestedProperties()) {
-                String nestedClassName = toPascalCase(prop.name);
-                if ("array".equals(prop.type)) {
-                    javaType = "List<" + nestedClassName + ">";
-                } else {
-                    javaType = nestedClassName;
-                }
-            } else if (prop.hasItemType()) {
-                // 数组元素是基本类型
-                String itemJavaType = mapTypeToJava(prop.itemType);
-                javaType = "List<" + itemJavaType + ">";
-            } else {
-                javaType = mapTypeToJava(prop.type);
-            }
-
-            code.append("    public ").append(javaType).append(" get").append(propNamePascal).append("() {\n");
-            code.append("        return ").append(prop.name).append(";\n");
-            code.append("    }\n");
-            code.append("\n");
-            code.append("    public void set").append(propNamePascal).append("(").append(javaType).append(" ").append(prop.name).append(") {\n");
-            code.append("        this.").append(prop.name).append(" = ").append(prop.name).append(";\n");
-            code.append("    }\n");
-            code.append("\n");
-        }
+        // 生成 getter/setter
+        generateAccessors(code, api.properties);
 
         // 生成 getApiName 方法
         code.append("    @Override\n");
@@ -523,27 +545,146 @@ public class OpenApiCodeGenerator {
         code.append("        return \"").append(api.apiName).append("\";\n");
         code.append("    }\n");
 
-        // 收集所有嵌套类（扁平化结构）
-        List<NestedClassInfo> nestedClasses = new ArrayList<>();
-        collectAllNestedClasses(api.properties, nestedClasses);
-
-        // 统一生成所有嵌套类（放在外层类的底部）
-        for (NestedClassInfo nestedClass : nestedClasses) {
-            code.append(generateSingleNestedClass(nestedClass.className, nestedClass.properties, nestedClass.isItemClass));
-        }
+        // 生成嵌套类
+        generateNestedClasses(code, api.properties);
 
         code.append("}\n");
-
         return code.toString();
     }
 
     /**
-     * 嵌套类信息（用于收集所有嵌套类）
+     * 生成响应类代码
      */
-    static class NestedClassInfo {
-        String className;
-        List<PropertyInfo> properties;
-        boolean isItemClass;
+    private static String generateResponseClass(ApiInfo api) {
+        StringBuilder code = new StringBuilder();
+        String className = getClassName(api.apiName, SUFFIX_RESPONSE);
+
+        List<PropertyInfo> responseProperties = extractResponseProperties(api.details);
+        Set<String> imports = collectImports(responseProperties);
+
+        code.append("package ").append(BASE_PACKAGE).append(".resp;\n\n");
+        for (String imp : imports) {
+            code.append(IMPORT_STATEMENT).append(imp).append(";\n");
+        }
+        code.append("\n");
+
+        code.append("/**\n");
+        code.append(" * ").append(escapeHtml(api.summary)).append(" - 响应\n");
+        code.append(" **/\n");
+        code.append("public class ").append(className).append(" implements Serializable {\n\n");
+        code.append("    private static final long serialVersionUID = 1L;\n\n");
+
+        generateFields(code, responseProperties);
+        generateAccessors(code, responseProperties);
+        generateNestedClasses(code, responseProperties);
+
+        code.append("}\n");
+        return code.toString();
+    }
+
+    /**
+     * 收集需要导入的类型
+     */
+    private static Set<String> collectImports(List<PropertyInfo> properties) {
+        Set<String> imports = new TreeSet<>();
+        imports.add("java.io.Serializable");
+
+        for (PropertyInfo prop : properties) {
+            if (TYPE_ARRAY.equals(prop.type)) {
+                imports.add("java.util.List");
+                break;
+            }
+        }
+
+        return imports;
+    }
+
+    /**
+     * 生成类注释
+     */
+    private static void generateClassComment(StringBuilder code, ApiInfo api, boolean isResponse) {
+        code.append("/**\n");
+        code.append(" * ").append(escapeHtml(api.summary)).append("\n");
+        if (api.description != null && !api.description.isEmpty()) {
+            String desc = api.description.length() > MAX_DESCRIPTION_LENGTH
+                ? api.description.substring(0, MAX_DESCRIPTION_LENGTH) + "..."
+                : api.description;
+            code.append(" * ").append(escapeHtml(desc)).append("\n");
+        }
+        if (!isResponse) {
+            code.append(" *\n");
+            code.append(" * API 路径: ").append(escapeHtml(api.path)).append("\n");
+            code.append(" * 请求方法: ").append(api.method).append("\n");
+        }
+        code.append(" **/\n");
+    }
+
+    /**
+     * 生成字段
+     */
+    private static void generateFields(StringBuilder code, List<PropertyInfo> properties) {
+        for (PropertyInfo prop : properties) {
+            String javaType = getJavaType(prop);
+            code.append("    /**\n");
+            code.append("     * ").append(prop.description != null ? escapeHtml(prop.description) : "").append("\n");
+            code.append("     */\n");
+            code.append("    private ").append(javaType).append(" ").append(prop.name).append(";\n\n");
+        }
+    }
+
+    /**
+     * 生成 getter/setter
+     */
+    private static void generateAccessors(StringBuilder code, List<PropertyInfo> properties) {
+        for (PropertyInfo prop : properties) {
+            String propNamePascal = toPascalCase(prop.name);
+            String javaType = getJavaType(prop);
+
+            code.append("    public ").append(javaType).append(" get").append(propNamePascal).append("() {\n");
+            code.append("        return ").append(prop.name).append(";\n");
+            code.append(METHOD_CLOSING_BRACE);
+
+            code.append("    public void set").append(propNamePascal).append("(").append(javaType).append(" ")
+                .append(prop.name).append(") {\n");
+            code.append("        this.").append(prop.name).append(" = ").append(prop.name).append(";\n");
+            code.append(METHOD_CLOSING_BRACE);
+        }
+    }
+
+    /**
+     * 生成嵌套类
+     */
+    private static void generateNestedClasses(StringBuilder code, List<PropertyInfo> properties) {
+        List<NestedClassInfo> nestedClasses = new ArrayList<>();
+        collectAllNestedClasses(properties, nestedClasses);
+
+        for (NestedClassInfo nestedClass : nestedClasses) {
+            code.append(generateSingleNestedClass(nestedClass));
+        }
+    }
+
+    /**
+     * 获取属性的 Java 类型
+     */
+    private static String getJavaType(PropertyInfo prop) {
+        if (prop.hasNestedProperties()) {
+            String nestedClassName = toPascalCase(prop.name);
+            return TYPE_ARRAY.equals(prop.type) ? "List<" + nestedClassName + ">" : nestedClassName;
+        } else if (prop.hasItemType()) {
+            String itemJavaType = mapTypeToJava(prop.itemType);
+            return "List<" + itemJavaType + ">";
+        } else {
+            return mapTypeToJava(prop.type);
+        }
+    }
+
+    /**
+     * 嵌套类信息
+     */
+    private static class NestedClassInfo {
+        private final String className;
+        private final List<PropertyInfo> properties;
+        private final boolean isItemClass;
 
         NestedClassInfo(String className, List<PropertyInfo> properties, boolean isItemClass) {
             this.className = className;
@@ -553,14 +694,11 @@ public class OpenApiCodeGenerator {
     }
 
     /**
-     * 递归收集所有嵌套类（扁平化结构）
-     * 当内部类名称重复时，合并字段而不是重复生成
+     * 递归收集所有嵌套类
      */
     private static void collectAllNestedClasses(List<PropertyInfo> properties, List<NestedClassInfo> collectedClasses) {
-        // 使用 Map 按类名收集嵌套类，以便合并重名的内部类
         Map<String, NestedClassInfo> classMap = new LinkedHashMap<>();
         collectNestedClassesToMap(properties, classMap);
-        // 将 Map 中的类添加到列表中
         collectedClasses.addAll(classMap.values());
     }
 
@@ -571,19 +709,15 @@ public class OpenApiCodeGenerator {
         for (PropertyInfo prop : properties) {
             if (prop.hasNestedProperties()) {
                 String nestedClassName = toPascalCase(prop.name);
-                boolean isItemClass = "array".equals(prop.type);
+                boolean isItemClass = TYPE_ARRAY.equals(prop.type);
 
-                // 检查是否已存在同名内部类
                 NestedClassInfo existing = classMap.get(nestedClassName);
                 if (existing != null) {
-                    // 合并字段：将当前属性的字段添加到已存在的类中
                     mergeProperties(existing.properties, prop.nestedProperties);
                 } else {
-                    // 创建新的嵌套类
                     classMap.put(nestedClassName, new NestedClassInfo(nestedClassName, prop.nestedProperties, isItemClass));
                 }
 
-                // 递归收集更深层的嵌套类
                 collectNestedClassesToMap(prop.nestedProperties, classMap);
             }
         }
@@ -591,240 +725,45 @@ public class OpenApiCodeGenerator {
 
     /**
      * 合并属性列表
-     * @param target 目标属性列表
-     * @param source 要合并的源属性列表
      */
     private static void mergeProperties(List<PropertyInfo> target, List<PropertyInfo> source) {
-        // 使用 Map 按字段名去重
         Map<String, PropertyInfo> propMap = new LinkedHashMap<>();
         for (PropertyInfo prop : target) {
             propMap.put(prop.name, prop);
         }
         for (PropertyInfo prop : source) {
-            // 如果字段不存在，则添加；如果已存在，则跳过（保持第一个定义）
             propMap.putIfAbsent(prop.name, prop);
         }
-        // 更新目标列表
         target.clear();
         target.addAll(propMap.values());
     }
 
     /**
-     * 生成单个嵌套类代码（不递归生成内部嵌套类）
+     * 生成单个嵌套类代码
      */
-    private static String generateSingleNestedClass(String className, List<PropertyInfo> properties, boolean isItemClass) {
+    private static String generateSingleNestedClass(NestedClassInfo nestedClass) {
         StringBuilder code = new StringBuilder();
 
         code.append("    /**\n");
-        code.append("     * ").append(isItemClass ? "数组元素" : "嵌套对象").append("\n");
+        code.append("     * ").append(nestedClass.isItemClass ? "数组元素" : "嵌套对象").append("\n");
         code.append("     */\n");
-        code.append("    public static final class ").append(className).append(" implements Serializable {\n");
-        code.append("        private static final long serialVersionUID = 1L;\n");
-        code.append("\n");
+        code.append("    public static final class ").append(nestedClass.className).append(" implements Serializable {\n");
+        code.append("        private static final long serialVersionUID = 1L;\n\n");
 
-        // 生成属性
-        for (PropertyInfo prop : properties) {
-            String javaType;
-            if (prop.hasNestedProperties()) {
-                String nestedClassName = toPascalCase(prop.name);
-                if ("array".equals(prop.type)) {
-                    javaType = "List<" + nestedClassName + ">";
-                } else {
-                    javaType = nestedClassName;
-                }
-            } else if (prop.hasItemType()) {
-                String itemJavaType = mapTypeToJava(prop.itemType);
-                javaType = "List<" + itemJavaType + ">";
-            } else {
-                javaType = mapTypeToJava(prop.type);
-            }
-            code.append("        /**\n");
-            code.append("         * ").append(prop.description != null ? escapeHtml(prop.description) : "").append("\n");
-            code.append("         */\n");
-            // 字段名直接使用 API 文档中的原始名称
-            code.append("        private ").append(javaType).append(" ").append(prop.name).append(";\n");
-            code.append("\n");
-        }
+        generateFields(code, nestedClass.properties);
+        generateAccessors(code, nestedClass.properties);
 
-        // 生成 getter 和 setter
-        for (PropertyInfo prop : properties) {
-            String propNamePascal = toPascalCase(prop.name);
-            String javaType;
-            if (prop.hasNestedProperties()) {
-                String nestedClassName = toPascalCase(prop.name);
-                if ("array".equals(prop.type)) {
-                    javaType = "List<" + nestedClassName + ">";
-                } else {
-                    javaType = nestedClassName;
-                }
-            } else if (prop.hasItemType()) {
-                String itemJavaType = mapTypeToJava(prop.itemType);
-                javaType = "List<" + itemJavaType + ">";
-            } else {
-                javaType = mapTypeToJava(prop.type);
-            }
-
-            code.append("        public ").append(javaType).append(" get").append(propNamePascal).append("() {\n");
-            code.append("            return ").append(prop.name).append(";\n");
-            code.append("        }\n");
-            code.append("\n");
-            code.append("        public void set").append(propNamePascal).append("(").append(javaType).append(" ").append(prop.name).append(") {\n");
-            code.append("            this.").append(prop.name).append(" = ").append(prop.name).append(";\n");
-            code.append("        }\n");
-            code.append("\n");
-        }
-
-        code.append("    }\n");
-        code.append("\n");
-
+        code.append(METHOD_CLOSING_BRACE);  // 嵌套类闭合括号
         return code.toString();
     }
 
     /**
-     * 生成响应类代码
-     */
-    private static String generateResponseClass(ApiInfo api) {
-        StringBuilder code = new StringBuilder();
-        String className = getResponseClassName(api.apiName);
-
-        // 收集需要导入的类型
-        Set<String> imports = new TreeSet<>();
-        imports.add("java.io.Serializable");
-
-        // 从 API 中提取响应字段
-        List<PropertyInfo> responseProperties = extractResponseProperties(api.details);
-
-        // 检查是否有 List 类型
-        for (PropertyInfo prop : responseProperties) {
-            if ("array".equals(prop.type)) {
-                imports.add("java.util.List");
-                break;
-            }
-        }
-
-        code.append("package ").append(BASE_PACKAGE).append(".resp;\n");
-        code.append("\n");
-        for (String imp : imports) {
-            code.append("import ").append(imp).append(";\n");
-        }
-        code.append("\n");
-        code.append("/**\n");
-        code.append(" * ").append(escapeHtml(api.summary)).append(" - 响应\n");
-        code.append(" **/\n");
-        code.append("public class ").append(className).append(" implements Serializable {\n");
-        code.append("\n");
-        code.append("    private static final long serialVersionUID = 1L;\n");
-        code.append("\n");
-
-        // 生成响应字段
-        for (PropertyInfo prop : responseProperties) {
-            String javaType;
-            if (prop.hasNestedProperties()) {
-                String nestedClassName = toPascalCase(prop.name);
-                if ("array".equals(prop.type)) {
-                    javaType = "List<" + nestedClassName + ">";
-                } else {
-                    javaType = nestedClassName;
-                }
-            } else if (prop.hasItemType()) {
-                // 数组元素是基本类型
-                String itemJavaType = mapTypeToJava(prop.itemType);
-                javaType = "List<" + itemJavaType + ">";
-            } else {
-                javaType = mapTypeToJava(prop.type);
-            }
-            code.append("    /**\n");
-            code.append("     * ").append(prop.description != null ? escapeHtml(prop.description) : "").append("\n");
-            code.append("     */\n");
-            // 字段名直接使用 API 文档中的原始名称
-            code.append("    private ").append(javaType).append(" ").append(prop.name).append(";\n");
-            code.append("\n");
-        }
-
-        // 生成 getter 和 setter
-        for (PropertyInfo prop : responseProperties) {
-            String propNamePascal = toPascalCase(prop.name);
-            String javaType;
-            if (prop.hasNestedProperties()) {
-                String nestedClassName = toPascalCase(prop.name);
-                if ("array".equals(prop.type)) {
-                    javaType = "List<" + nestedClassName + ">";
-                } else {
-                    javaType = nestedClassName;
-                }
-            } else if (prop.hasItemType()) {
-                // 数组元素是基本类型
-                String itemJavaType = mapTypeToJava(prop.itemType);
-                javaType = "List<" + itemJavaType + ">";
-            } else {
-                javaType = mapTypeToJava(prop.type);
-            }
-
-            code.append("    public ").append(javaType).append(" get").append(propNamePascal).append("() {\n");
-            code.append("        return ").append(prop.name).append(";\n");
-            code.append("    }\n");
-            code.append("\n");
-            code.append("    public void set").append(propNamePascal).append("(").append(javaType).append(" ").append(prop.name).append(") {\n");
-            code.append("        this.").append(prop.name).append(" = ").append(prop.name).append(";\n");
-            code.append("    }\n");
-            code.append("\n");
-        }
-
-        // 收集所有嵌套类（扁平化结构）
-        List<NestedClassInfo> nestedClasses = new ArrayList<>();
-        collectAllNestedClasses(responseProperties, nestedClasses);
-
-        // 统一生成所有嵌套类（放在外层类的底部）
-        for (NestedClassInfo nestedClass : nestedClasses) {
-            code.append(generateSingleNestedClass(nestedClass.className, nestedClass.properties, nestedClass.isItemClass));
-        }
-
-        code.append("}\n");
-
-        return code.toString();
-    }
-
-    /**
-     * 转换为驼峰命名（首字母小写）- 仅用于类名
-     * 字段名直接使用 API 文档中的原始名称，不做转换
-     */
-    private static String toCamelCase(String text) {
-        if (text == null || text.isEmpty()) {
-            return text;
-        }
-        // 替换特殊字符为下划线
-        text = text.replaceAll("[^a-zA-Z0-9]", "_");
-
-        // 如果包含下划线，按驼峰处理
-        if (text.contains("_")) {
-            String[] parts = text.split("_");
-            StringBuilder result = new StringBuilder(parts[0].toLowerCase());
-            for (int i = 1; i < parts.length; i++) {
-                if (!parts[i].isEmpty()) {
-                    result.append(Character.toUpperCase(parts[i].charAt(0)));
-                    if (parts[i].length() > 1) {
-                        result.append(parts[i].substring(1).toLowerCase());
-                    }
-                }
-            }
-            return result.toString();
-        }
-
-        // 不包含下划线，直接返回小写首字母
-        if (Character.isUpperCase(text.charAt(0))) {
-            return Character.toLowerCase(text.charAt(0)) + text.substring(1);
-        }
-        return text;
-    }
-
-    /**
-     * 转换为帕斯卡命名（首字母大写）- 保持其他字母不变
+     * 转换为帕斯卡命名（首字母大写）
      */
     private static String toPascalCase(String text) {
         if (text == null || text.isEmpty()) {
             return text;
         }
-        // 只将首字母大写，保持其他字母不变
         if (Character.isLowerCase(text.charAt(0))) {
             return Character.toUpperCase(text.charAt(0)) + text.substring(1);
         }
@@ -832,37 +771,25 @@ public class OpenApiCodeGenerator {
     }
 
     /**
-     * 生成请求类名（处理 API 名称已包含 Request/Response 后缀的情况）
+     * 生成类名（统一处理请求类和响应类）
      */
-    private static String getRequestClassName(String apiName) {
+    private static String getClassName(String apiName, String suffix) {
+        // 处理 null 输入
+        if (apiName == null) {
+            return "Unknown" + suffix;
+        }
+
         String className = toPascalCase(apiName);
         className = className.replaceAll("[^\\w]", "_");
 
-        // 如果已经以 Request 或 Response 结尾，去掉它
-        if (className.endsWith("Request")) {
-            className = className.substring(0, className.length() - 7);
-        } else if (className.endsWith("Response")) {
-            className = className.substring(0, className.length() - 8);
+        // 去除已存在的后缀
+        if (className.endsWith(SUFFIX_REQUEST)) {
+            className = className.substring(0, className.length() - REQUEST_SUFFIX_LENGTH);
+        } else if (className.endsWith(SUFFIX_RESPONSE)) {
+            className = className.substring(0, className.length() - RESPONSE_SUFFIX_LENGTH);
         }
 
-        return className + "Request";
-    }
-
-    /**
-     * 生成响应类名（处理 API 名称已包含 Request/Response 后缀的情况）
-     */
-    private static String getResponseClassName(String apiName) {
-        String className = toPascalCase(apiName);
-        className = className.replaceAll("[^\\w]", "_");
-
-        // 如果已经以 Request 或 Response 结尾，去掉它
-        if (className.endsWith("Request")) {
-            className = className.substring(0, className.length() - 7);
-        } else if (className.endsWith("Response")) {
-            className = className.substring(0, className.length() - 8);
-        }
-
-        return className + "Response";
+        return className + suffix;
     }
 
     /**
@@ -870,23 +797,24 @@ public class OpenApiCodeGenerator {
      */
     private static String mapTypeToJava(String jsonType) {
         if (jsonType == null) {
-            return "String";
+            return TYPE_STRING;
         }
+
         switch (jsonType) {
             case "string":
-                return "String";
+                return TYPE_STRING;
             case "integer":
                 return "Integer";
             case "number":
                 return "Long";
             case "boolean":
                 return "Boolean";
-            case "array":
+            case TYPE_ARRAY:
                 return "List";
             case "object":
                 return "Object";
             default:
-                return "String";
+                return TYPE_STRING;
         }
     }
 
@@ -905,17 +833,16 @@ public class OpenApiCodeGenerator {
     }
 
     /**
-     * 写入文件（确保文件名使用帕斯卡命名）
+     * 写入文件
      */
     private static void writeFile(Path filePath, String content) throws IOException {
         Files.createDirectories(filePath.getParent());
 
-        // 确保文件名使用帕斯卡命名
         String fileName = filePath.getFileName().toString();
-        String className = fileName.replace(".java", "");
+        String className = fileName.replace(FILE_EXT_JAVA, "");
         String pascalClassName = toPascalCase(className);
 
-        Path newFilePath = filePath.resolveSibling(pascalClassName + ".java");
+        Path newFilePath = filePath.resolveSibling(pascalClassName + FILE_EXT_JAVA);
 
         try (BufferedWriter writer = Files.newBufferedWriter(newFilePath, StandardCharsets.UTF_8)) {
             writer.write(content);
@@ -924,34 +851,16 @@ public class OpenApiCodeGenerator {
     }
 
     /**
-     * 获取已存在的请求类
+     * 获取已存在的类（统一处理请求类和响应类）
      */
-    private static Set<String> getExistingRequestClasses() {
+    private static Set<String> getExistingClasses(String dirPath, String fileSuffix) {
         Set<String> existingClasses = new HashSet<>();
-        File dir = new File(REQ_OUTPUT_DIR);
+        File dir = new File(dirPath);
         if (dir.exists()) {
-            File[] files = dir.listFiles((d, name) -> name.endsWith("Request.java"));
+            File[] files = dir.listFiles((d, name) -> name.endsWith(fileSuffix));
             if (files != null) {
                 for (File file : files) {
-                    String className = file.getName().replace(".java", "");
-                    existingClasses.add(className);
-                }
-            }
-        }
-        return existingClasses;
-    }
-
-    /**
-     * 获取已存在的响应类
-     */
-    private static Set<String> getExistingResponseClasses() {
-        Set<String> existingClasses = new HashSet<>();
-        File dir = new File(RESP_OUTPUT_DIR);
-        if (dir.exists()) {
-            File[] files = dir.listFiles((d, name) -> name.endsWith("Response.java"));
-            if (files != null) {
-                for (File file : files) {
-                    String className = file.getName().replace(".java", "");
+                    String className = file.getName().replace(FILE_EXT_JAVA, "");
                     existingClasses.add(className);
                 }
             }
@@ -962,16 +871,17 @@ public class OpenApiCodeGenerator {
     /**
      * API 信息
      */
-    static class ApiInfo {
-        String path;
-        String method;
-        String summary;
-        String apiName;
-        List<PropertyInfo> properties;
-        String description;
-        JSONObject details;  // 保存完整的 details 对象，用于提取响应字段
+    private static class ApiInfo {
+        private final String path;
+        private final String method;
+        private final String summary;
+        private final String apiName;
+        private final List<PropertyInfo> properties;
+        private final String description;
+        private final JSONObject details;
 
-        ApiInfo(String path, String method, String summary, String apiName, List<PropertyInfo> properties, String description, JSONObject details) {
+        ApiInfo(String path, String method, String summary, String apiName,
+                List<PropertyInfo> properties, String description, JSONObject details) {
             this.path = path;
             this.method = method;
             this.summary = summary;
@@ -985,32 +895,31 @@ public class OpenApiCodeGenerator {
     /**
      * 属性信息
      */
-    static class PropertyInfo {
-        String name;
-        String type;
-        String description;
-        // 嵌套属性（用于 object 或 array 的 item 类型）
-        List<PropertyInfo> nestedProperties;
-        // 数组元素的基本类型（当数组元素不是嵌套对象时使用，如 String, Integer 等）
-        String itemType;
+    private static class PropertyInfo {
+        private final String name;
+        private final String type;
+        private final String description;
+        private final List<PropertyInfo> nestedProperties;
+        private final String itemType;
 
         PropertyInfo(String name, String type, String description) {
-            this.name = name;
-            this.type = type;
-            this.description = description;
+            this(name, type, description, null, null);
         }
 
         PropertyInfo(String name, String type, String description, List<PropertyInfo> nestedProperties) {
+            this(name, type, description, nestedProperties, null);
+        }
+
+        PropertyInfo(String name, String type, String description, String itemType) {
+            this(name, type, description, null, itemType);
+        }
+
+        private PropertyInfo(String name, String type, String description,
+                           List<PropertyInfo> nestedProperties, String itemType) {
             this.name = name;
             this.type = type;
             this.description = description;
             this.nestedProperties = nestedProperties;
-        }
-
-        PropertyInfo(String name, String type, String description, String itemType) {
-            this.name = name;
-            this.type = type;
-            this.description = description;
             this.itemType = itemType;
         }
 
