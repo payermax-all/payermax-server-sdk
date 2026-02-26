@@ -490,17 +490,59 @@ public class OpenApiCodeGenerator {
 
     /**
      * 递归收集所有嵌套类（扁平化结构）
+     * 当内部类名称重复时，合并字段而不是重复生成
      */
     private static void collectAllNestedClasses(List<PropertyInfo> properties, List<NestedClassInfo> collectedClasses) {
+        // 使用 Map 按类名收集嵌套类，以便合并重名的内部类
+        Map<String, NestedClassInfo> classMap = new LinkedHashMap<>();
+        collectNestedClassesToMap(properties, classMap);
+        // 将 Map 中的类添加到列表中
+        collectedClasses.addAll(classMap.values());
+    }
+
+    /**
+     * 递归收集所有嵌套类到 Map 中（按类名合并）
+     */
+    private static void collectNestedClassesToMap(List<PropertyInfo> properties, Map<String, NestedClassInfo> classMap) {
         for (PropertyInfo prop : properties) {
             if (prop.hasNestedProperties()) {
                 String nestedClassName = toPascalCase(prop.name);
-                // 添加当前嵌套类
-                collectedClasses.add(new NestedClassInfo(nestedClassName, prop.nestedProperties, "array".equals(prop.type)));
+                boolean isItemClass = "array".equals(prop.type);
+
+                // 检查是否已存在同名内部类
+                NestedClassInfo existing = classMap.get(nestedClassName);
+                if (existing != null) {
+                    // 合并字段：将当前属性的字段添加到已存在的类中
+                    mergeProperties(existing.properties, prop.nestedProperties);
+                } else {
+                    // 创建新的嵌套类
+                    classMap.put(nestedClassName, new NestedClassInfo(nestedClassName, prop.nestedProperties, isItemClass));
+                }
+
                 // 递归收集更深层的嵌套类
-                collectAllNestedClasses(prop.nestedProperties, collectedClasses);
+                collectNestedClassesToMap(prop.nestedProperties, classMap);
             }
         }
+    }
+
+    /**
+     * 合并属性列表
+     * @param target 目标属性列表
+     * @param source 要合并的源属性列表
+     */
+    private static void mergeProperties(List<PropertyInfo> target, List<PropertyInfo> source) {
+        // 使用 Map 按字段名去重
+        Map<String, PropertyInfo> propMap = new LinkedHashMap<>();
+        for (PropertyInfo prop : target) {
+            propMap.put(prop.name, prop);
+        }
+        for (PropertyInfo prop : source) {
+            // 如果字段不存在，则添加；如果已存在，则跳过（保持第一个定义）
+            propMap.putIfAbsent(prop.name, prop);
+        }
+        // 更新目标列表
+        target.clear();
+        target.addAll(propMap.values());
     }
 
     /**
