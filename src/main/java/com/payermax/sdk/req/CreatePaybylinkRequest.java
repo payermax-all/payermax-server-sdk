@@ -222,7 +222,6 @@ public class CreatePaybylinkRequest extends BaseRequest<CreatePaybylinkResponse>
         }
 
     }
-
     /**
      * 数组元素
      */
@@ -308,7 +307,6 @@ public class CreatePaybylinkRequest extends BaseRequest<CreatePaybylinkResponse>
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -342,5 +340,4 @@ public class CreatePaybylinkRequest extends BaseRequest<CreatePaybylinkResponse>
         }
 
     }
-
 }

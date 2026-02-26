@@ -78,5 +78,4 @@ public class ConfirmPaymentRequest extends BaseRequest<ConfirmPaymentResponse> i
         }
 
     }
-
 }

@@ -482,7 +482,6 @@ public class PaymentOrderPayRequest extends BaseRequest<PaymentOrderPayResponse>
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -516,7 +515,6 @@ public class PaymentOrderPayRequest extends BaseRequest<PaymentOrderPayResponse>
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -602,7 +600,6 @@ public class PaymentOrderPayRequest extends BaseRequest<PaymentOrderPayResponse>
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -662,7 +659,6 @@ public class PaymentOrderPayRequest extends BaseRequest<PaymentOrderPayResponse>
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -852,7 +848,6 @@ public class PaymentOrderPayRequest extends BaseRequest<PaymentOrderPayResponse>
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -899,7 +894,6 @@ public class PaymentOrderPayRequest extends BaseRequest<PaymentOrderPayResponse>
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -972,7 +966,6 @@ public class PaymentOrderPayRequest extends BaseRequest<PaymentOrderPayResponse>
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -1032,7 +1025,6 @@ public class PaymentOrderPayRequest extends BaseRequest<PaymentOrderPayResponse>
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -1092,5 +1084,4 @@ public class PaymentOrderPayRequest extends BaseRequest<PaymentOrderPayResponse>
         }
 
     }
-
 }

@@ -264,7 +264,6 @@ public class OrderQueryResponse implements Serializable {
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -311,7 +310,6 @@ public class OrderQueryResponse implements Serializable {
         }
 
     }
-
     /**
      * 数组元素
      */
@@ -410,7 +408,6 @@ public class OrderQueryResponse implements Serializable {
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -639,7 +636,6 @@ public class OrderQueryResponse implements Serializable {
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -738,5 +734,4 @@ public class OrderQueryResponse implements Serializable {
         }
 
     }
-
 }

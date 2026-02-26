@@ -195,7 +195,6 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -229,7 +228,6 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -263,7 +261,6 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -297,7 +294,6 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -331,7 +327,6 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -365,7 +360,6 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -399,5 +393,4 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
         }
 
     }
-
 }

@@ -251,7 +251,6 @@ public class QueryPaybylinkResponse implements Serializable {
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -285,7 +284,6 @@ public class QueryPaybylinkResponse implements Serializable {
         }
 
     }
-
     /**
      * 数组元素
      */
@@ -332,7 +330,6 @@ public class QueryPaybylinkResponse implements Serializable {
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -509,7 +506,6 @@ public class QueryPaybylinkResponse implements Serializable {
         }
 
     }
-
     /**
      * 数组元素
      */
@@ -595,5 +591,4 @@ public class QueryPaybylinkResponse implements Serializable {
         }
 
     }
-
 }

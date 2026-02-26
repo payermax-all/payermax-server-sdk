@@ -28,6 +28,7 @@ public class OpenApiCodeGenerator {
     private static final String BASE_PACKAGE = "com.payermax.sdk";
 
     // JSON 路径常量
+    private static final String JSON_PATHS = "paths";
     private static final String JSON_PATH_RESPONSES = "responses";
     private static final String JSON_RESPONSE_200 = "200";
     private static final String JSON_CONTENT = "content";
@@ -46,6 +47,11 @@ public class OpenApiCodeGenerator {
     private static final int REQUEST_SUFFIX_LENGTH = 7;
     private static final int RESPONSE_SUFFIX_LENGTH = 8;
 
+    // 缩进常量
+    private static final String INDENT_4 = "    ";
+    private static final String INDENT_8 = "        ";
+    private static final String INDENT_12 = "            ";
+
     // 其他常量
     private static final int MAX_DESCRIPTION_LENGTH = 100;
     private static final String INTERFACE_NAME_CN = "接口名称：";
@@ -57,7 +63,6 @@ public class OpenApiCodeGenerator {
     private static final String TYPE_ARRAY = "array";
     private static final String TYPE_STRING = "String";
     private static final String IMPORT_STATEMENT = "import ";
-    private static final String METHOD_CLOSING_BRACE = "    }\n\n";
 
     // HTTP 方法集合
     private static final Set<String> HTTP_METHODS = new HashSet<>(
@@ -117,7 +122,7 @@ public class OpenApiCodeGenerator {
      */
     private static List<ApiInfo> parseApis(JSONObject openapi) {
         List<ApiInfo> apis = new ArrayList<>();
-        JSONObject paths = openapi.getJSONObject(JSON_PROPERTIES);
+        JSONObject paths = openapi.getJSONObject(JSON_PATHS);
 
         if (paths == null) {
             return apis;
@@ -623,12 +628,20 @@ public class OpenApiCodeGenerator {
      * 生成字段
      */
     private static void generateFields(StringBuilder code, List<PropertyInfo> properties) {
+        generateFields(code, properties, INDENT_4);
+    }
+
+    /**
+     * 生成字段（支持自定义缩进）
+     */
+    private static void generateFields(StringBuilder code, List<PropertyInfo> properties, String indent) {
+        String commentIndent = indent + " ";
         for (PropertyInfo prop : properties) {
             String javaType = getJavaType(prop);
-            code.append("    /**\n");
-            code.append("     * ").append(prop.description != null ? escapeHtml(prop.description) : "").append("\n");
-            code.append("     */\n");
-            code.append("    private ").append(javaType).append(" ").append(prop.name).append(";\n\n");
+            code.append(indent).append("/**\n");
+            code.append(commentIndent).append("* ").append(prop.description != null ? escapeHtml(prop.description) : "").append("\n");
+            code.append(commentIndent).append("*/\n");
+            code.append(indent).append("private ").append(javaType).append(" ").append(prop.name).append(";\n\n");
         }
     }
 
@@ -636,18 +649,26 @@ public class OpenApiCodeGenerator {
      * 生成 getter/setter
      */
     private static void generateAccessors(StringBuilder code, List<PropertyInfo> properties) {
+        generateAccessors(code, properties, INDENT_4);
+    }
+
+    /**
+     * 生成 getter/setter（支持自定义缩进）
+     */
+    private static void generateAccessors(StringBuilder code, List<PropertyInfo> properties, String indent) {
+        String innerIndent = indent.equals(INDENT_4) ? INDENT_8 : INDENT_12;
         for (PropertyInfo prop : properties) {
             String propNamePascal = toPascalCase(prop.name);
             String javaType = getJavaType(prop);
 
-            code.append("    public ").append(javaType).append(" get").append(propNamePascal).append("() {\n");
-            code.append("        return ").append(prop.name).append(";\n");
-            code.append(METHOD_CLOSING_BRACE);
+            code.append(indent).append("public ").append(javaType).append(" get").append(propNamePascal).append("() {\n");
+            code.append(innerIndent).append("return ").append(prop.name).append(";\n");
+            code.append(indent).append("}\n\n");
 
-            code.append("    public void set").append(propNamePascal).append("(").append(javaType).append(" ")
+            code.append(indent).append("public void set").append(propNamePascal).append("(").append(javaType).append(" ")
                 .append(prop.name).append(") {\n");
-            code.append("        this.").append(prop.name).append(" = ").append(prop.name).append(";\n");
-            code.append(METHOD_CLOSING_BRACE);
+            code.append(innerIndent).append("this.").append(prop.name).append(" = ").append(prop.name).append(";\n");
+            code.append(indent).append("}\n\n");
         }
     }
 
@@ -743,17 +764,18 @@ public class OpenApiCodeGenerator {
      */
     private static String generateSingleNestedClass(NestedClassInfo nestedClass) {
         StringBuilder code = new StringBuilder();
+        String commentIndent = INDENT_4 + " ";
 
-        code.append("    /**\n");
-        code.append("     * ").append(nestedClass.isItemClass ? "数组元素" : "嵌套对象").append("\n");
-        code.append("     */\n");
-        code.append("    public static final class ").append(nestedClass.className).append(" implements Serializable {\n");
-        code.append("        private static final long serialVersionUID = 1L;\n\n");
+        code.append(INDENT_4).append("/**\n");
+        code.append(commentIndent).append("* ").append(nestedClass.isItemClass ? "数组元素" : "嵌套对象").append("\n");
+        code.append(commentIndent).append("*/\n");
+        code.append(INDENT_4).append("public static final class ").append(nestedClass.className).append(" implements Serializable {\n");
+        code.append(INDENT_8).append("private static final long serialVersionUID = 1L;\n\n");
 
-        generateFields(code, nestedClass.properties);
-        generateAccessors(code, nestedClass.properties);
+        generateFields(code, nestedClass.properties, INDENT_8);
+        generateAccessors(code, nestedClass.properties, INDENT_8);
 
-        code.append(METHOD_CLOSING_BRACE);  // 嵌套类闭合括号
+        code.append(INDENT_4).append("}\n");  // 嵌套类闭合括号
         return code.toString();
     }
 

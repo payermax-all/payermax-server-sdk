@@ -108,5 +108,4 @@ public class CurrentBalanceQueryResponse implements Serializable {
         }
 
     }
-
 }

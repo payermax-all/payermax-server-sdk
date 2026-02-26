@@ -197,5 +197,4 @@ public class CollectResultNotifyUrlForBillPaymentRequest extends BaseRequest<Col
         }
 
     }
-
 }

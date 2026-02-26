@@ -130,5 +130,4 @@ public class AddOrDelRiskNameListRequest extends BaseRequest<AddOrDelRiskNameLis
         }
 
     }
-
 }

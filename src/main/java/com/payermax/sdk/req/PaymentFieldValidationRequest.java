@@ -195,7 +195,6 @@ public class PaymentFieldValidationRequest extends BaseRequest<PaymentFieldValid
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -255,7 +254,6 @@ public class PaymentFieldValidationRequest extends BaseRequest<PaymentFieldValid
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -445,7 +443,6 @@ public class PaymentFieldValidationRequest extends BaseRequest<PaymentFieldValid
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -492,7 +489,6 @@ public class PaymentFieldValidationRequest extends BaseRequest<PaymentFieldValid
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -565,7 +561,6 @@ public class PaymentFieldValidationRequest extends BaseRequest<PaymentFieldValid
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -625,7 +620,6 @@ public class PaymentFieldValidationRequest extends BaseRequest<PaymentFieldValid
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -685,5 +679,4 @@ public class PaymentFieldValidationRequest extends BaseRequest<PaymentFieldValid
         }
 
     }
-
 }

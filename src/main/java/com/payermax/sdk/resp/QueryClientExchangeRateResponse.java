@@ -167,5 +167,4 @@ public class QueryClientExchangeRateResponse implements Serializable {
         }
 
     }
-
 }

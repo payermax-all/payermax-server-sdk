@@ -426,7 +426,6 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -447,7 +446,6 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -611,7 +609,6 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -775,7 +772,6 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -796,7 +792,6 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -908,7 +903,6 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
         }
 
     }
-
     /**
      * 数组元素
      */
@@ -942,7 +936,6 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -1002,5 +995,4 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
         }
 
     }
-
 }

@@ -81,5 +81,4 @@ public class SubscriptionCancelResponse implements Serializable {
         }
 
     }
-
 }

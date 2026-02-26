@@ -367,7 +367,6 @@ public class PaymentOrderQryResponse implements Serializable {
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -466,7 +465,6 @@ public class PaymentOrderQryResponse implements Serializable {
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -487,7 +485,6 @@ public class PaymentOrderQryResponse implements Serializable {
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -521,5 +518,4 @@ public class PaymentOrderQryResponse implements Serializable {
         }
 
     }
-
 }

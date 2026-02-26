@@ -91,5 +91,4 @@ public class PutRfiMaterialListRequest extends BaseRequest<PutRfiMaterialListRes
         }
 
     }
-
 }

@@ -199,7 +199,6 @@ public class SubscriptionQueryResponse implements Serializable {
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -233,7 +232,6 @@ public class SubscriptionQueryResponse implements Serializable {
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -397,7 +395,6 @@ public class SubscriptionQueryResponse implements Serializable {
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -474,7 +471,6 @@ FAILED：支付失败
         }
 
     }
-
     /**
      * 嵌套对象
      */
@@ -515,5 +511,4 @@ TERMINATE：订阅终止
         }
 
     }
-
 }

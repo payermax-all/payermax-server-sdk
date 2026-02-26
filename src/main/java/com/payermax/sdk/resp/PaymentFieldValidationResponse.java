@@ -82,7 +82,6 @@ public class PaymentFieldValidationResponse implements Serializable {
         }
 
     }
-
     /**
      * 数组元素
      */
@@ -103,7 +102,6 @@ public class PaymentFieldValidationResponse implements Serializable {
         }
 
     }
-
     /**
      * 数组元素
      */
@@ -137,5 +135,4 @@ public class PaymentFieldValidationResponse implements Serializable {
         }
 
     }
-
 }

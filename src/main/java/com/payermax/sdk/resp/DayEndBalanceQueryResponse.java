@@ -161,5 +161,4 @@ endBalance = initalBalance+ inflowAmount - outflowAmount
         }
 
     }
-
 }
