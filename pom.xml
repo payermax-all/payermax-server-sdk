@@ -6,7 +6,7 @@
 
     <groupId>com.payermax</groupId>
     <artifactId>payermax-server-sdk</artifactId>
-    <version>1.0.13</version>
+    <version>1.0.14</version>
 
     <name>payermax-server-sdk</name>
     <url>https://www.payermax.com/</url>
@@ -46,15 +46,15 @@
     <!-- scm -->
     <scm>
         <tag>master</tag>
-        <url>https://github.com/shareit-payermax/payermax-server-sdk</url>
-        <connection>scm:git:git@github.com:shareit-payermax/payermax-server-sdk.git</connection>
-        <developerConnection>scm:git:git@github.com:shareit-payermax/payermax-server-sdk.git</developerConnection>
+        <url>https://github.com/payermax-all/payermax-server-sdk.git</url>
+        <connection>scm:git:git@github.com:payermax-all/payermax-server-sdk.git</connection>
+        <developerConnection>scm:git:git@github.com:payermax-all/payermax-server-sdk.git</developerConnection>
     </scm>
 
     <!-- issues -->
     <issueManagement>
         <system>GitHub Issue Management</system>
-        <url>https://github.com/shareit-payermax/payermax-server-sdk/issues</url>
+        <url>https://github.com/payermax-all/payermax-server-sdk/issues</url>
     </issueManagement>
 
     <dependencies>
