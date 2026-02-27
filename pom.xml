@@ -6,7 +6,7 @@
 
     <groupId>com.payermax</groupId>
     <artifactId>payermax-server-sdk</artifactId>
-    <version>1.0.14</version>
+    <version>1.0.141</version>
 
     <name>payermax-server-sdk</name>
     <url>https://www.payermax.com/</url>
@@ -29,11 +29,11 @@
     <developers>
         <developer>
             <name>zhu.q</name>
-            <email>zhu.q@ushareit.com</email>
+            <email>zhuqiang@payermax.com</email>
         </developer>
         <developer>
             <name>zhanglong</name>
-            <email>zhanglong@ushareit.com</email>
+            <email>zhanglong@payermax.com</email>
         </developer>
     </developers>
 
