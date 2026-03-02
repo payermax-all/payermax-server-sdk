@@ -6,7 +6,7 @@
 
     <groupId>com.payermax</groupId>
     <artifactId>payermax-server-sdk</artifactId>
-    <version>1.0.12</version>
+    <version>1.0.141</version>
 
     <name>payermax-server-sdk</name>
     <url>https://www.payermax.com/</url>
@@ -29,11 +29,11 @@
     <developers>
         <developer>
             <name>zhu.q</name>
-            <email>zhu.q@ushareit.com</email>
+            <email>zhuqiang@payermax.com</email>
         </developer>
         <developer>
             <name>zhanglong</name>
-            <email>zhanglong@ushareit.com</email>
+            <email>zhanglong@payermax.com</email>
         </developer>
     </developers>
 
@@ -46,22 +46,22 @@
     <!-- scm -->
     <scm>
         <tag>master</tag>
-        <url>https://github.com/shareit-payermax/payermax-server-sdk</url>
-        <connection>scm:git:git@github.com:shareit-payermax/payermax-server-sdk.git</connection>
-        <developerConnection>scm:git:git@github.com:shareit-payermax/payermax-server-sdk.git</developerConnection>
+        <url>https://github.com/payermax-all/payermax-server-sdk.git</url>
+        <connection>scm:git:git@github.com:payermax-all/payermax-server-sdk.git</connection>
+        <developerConnection>scm:git:git@github.com:payermax-all/payermax-server-sdk.git</developerConnection>
     </scm>
 
     <!-- issues -->
     <issueManagement>
         <system>GitHub Issue Management</system>
-        <url>https://github.com/shareit-payermax/payermax-server-sdk/issues</url>
+        <url>https://github.com/payermax-all/payermax-server-sdk/issues</url>
     </issueManagement>
 
     <dependencies>
         <dependency>
             <groupId>com.squareup.okhttp3</groupId>
             <artifactId>okhttp</artifactId>
-            <version>4.9.3</version>
+            <version>4.12.0</version>
         </dependency>
 
         <dependency>
@@ -73,13 +73,13 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-lang3</artifactId>
-            <version>3.12.0</version>
+            <version>3.18.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>7.4.0</version>
+            <version>7.5.1</version>
             <scope>test</scope>
         </dependency>
 
