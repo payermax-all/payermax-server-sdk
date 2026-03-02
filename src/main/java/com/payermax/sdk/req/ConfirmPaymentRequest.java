@@ -17,17 +17,17 @@ public class ConfirmPaymentRequest extends BaseRequest<ConfirmPaymentResponse> i
 
     /**
      * 退款回调地址，可后台配置配置地址
-     */
+      **/
     private PaymentDetail paymentDetail;
 
     /**
      * 原商户订单号	
-     */
+      **/
     private String outTradeNo;
 
     /**
      * 正向交易单的交易Token
-     */
+      **/
     private String tradeToken;
 
     public PaymentDetail getPaymentDetail() {
@@ -60,13 +60,13 @@ public class ConfirmPaymentRequest extends BaseRequest<ConfirmPaymentResponse> i
     }
     /**
      * 嵌套对象
-     */
+      **/
     public static final class PaymentDetail implements Serializable {
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
         /**
          * 
-         */
+          **/
         private String verificationCode;
 
         public String getVerificationCode() {

@@ -17,27 +17,27 @@ public class AddOrDelRiskNameListRequest extends BaseRequest<AddOrDelRiskNameLis
 
     /**
      * 固定  BLACK 
-     */
+      **/
     private String nameType;
 
     /**
      * 长度 &lt;=128 唯一标识商户的一笔请求，不能重复
-     */
+      **/
     private String requestId;
 
     /**
      * ADD：添加  DELETE：删除 （重复添加会覆盖原名单）
-     */
+      **/
     private String operateType;
 
     /**
      * 长度&lt;=2000
-     */
+      **/
     private List<NameList> nameList;
 
     /**
      * 长度 &lt;=128
-     */
+      **/
     private String remark;
 
     public String getNameType() {
@@ -86,23 +86,23 @@ public class AddOrDelRiskNameListRequest extends BaseRequest<AddOrDelRiskNameLis
     }
     /**
      * 数组元素
-     */
+      **/
     public static final class NameList implements Serializable {
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
         /**
          * DAY：1天 WEEK： 7天 MONTH ：30天 HALFYEAR：180天 YEAR： 365天 FOREVER： 永久
-         */
+          **/
         private String expireType;
 
         /**
          * 长度&lt;=128 名单类型为NEG0001时 示例：123456-4321  名单类型为NEG0005时，国家代码，大写字母，参见交易支持国家/地区与币种
-         */
+          **/
         private String value;
 
         /**
          * NEG0001：卡号前6后4掩码 NEG0002：用户号黑名单 NEG0003：IP黑名单  NEG0004：卡BIN黑名单 NEG0005：卡BIN国家黑名单
-         */
+          **/
         private String key;
 
         public String getExpireType() {

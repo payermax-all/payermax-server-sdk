@@ -16,57 +16,57 @@ public class ApplyPaymentTokenRequest extends BaseRequest<ApplyPaymentTokenRespo
 
     /**
      * 目标机构，当paymentMethodType=BANKTRANSFER，值传YUSHANBANK
-     */
+      **/
     private String targetOrg;
 
     /**
      * 固定值：tokenAcq
-     */
+      **/
     private String tokenScope;
 
     /**
      * 国家代码，大写字母
-     */
+      **/
     private String country;
 
     /**
      * 详见风控业务数据商户上送信息
-     */
+      **/
     private Object riskParams;
 
     /**
      * 卡信息，当paymentMethodType=CARD时，必需
-     */
+      **/
     private String cardInfo;
 
     /**
      * 商户指定的跳转URL，完成token绑定后会被跳转到该地址，以http/https开头或者商户应用的scheme地址。
-     */
+      **/
     private String frontCallbackUrl;
 
     /**
      * 请求单号，唯一标识商户的一笔请求
-     */
+      **/
     private String requestId;
 
     /**
      * 
-     */
+      **/
     private String envInfo;
 
     /**
      * mit类型，token申请完成后用于mit代扣的类型；为空时，生成的token只能用于CIT；不为空时，值为SCHEDULE、UNSCHEDULE，生成的token可用于CIT和MIT代扣
-     */
+      **/
     private String mitType;
 
     /**
      * 支付方式类型，支持CARD、BANKTRANSFER
-     */
+      **/
     private String paymentMethodType;
 
     /**
      * 商户内部的用户Id，需要保证每个ID唯一性
-     */
+      **/
     private String userId;
 
     public String getTargetOrg() {

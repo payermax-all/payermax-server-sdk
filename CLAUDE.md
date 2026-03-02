@@ -107,3 +107,4 @@ SDK 支持两种商户配置模式：
 - Java 版本：1.8
 - 修改代码后记得运行 `mvn clean compile` 编译并自动修复编译错误
 - 新增请求类需继承 `BaseRequest<RESP>` 并实现 `getApiName()` 方法
+- 代码符合 SonarQube 规范

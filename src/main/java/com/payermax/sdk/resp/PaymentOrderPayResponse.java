@@ -11,17 +11,17 @@ public class PaymentOrderPayResponse implements Serializable {
 
     /**
      * PayerMax交易流水号
-     */
+      **/
     private String tradeNo;
 
     /**
      * 商户订单号
-     */
+      **/
     private String outTradeNo;
 
     /**
      * 交易状态
-     */
+      **/
     private String status;
 
     public String getTradeNo() {

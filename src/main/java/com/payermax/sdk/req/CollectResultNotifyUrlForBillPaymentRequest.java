@@ -19,57 +19,57 @@ public class CollectResultNotifyUrlForBillPaymentRequest extends BaseRequest<Col
 
     /**
      * 订单金额。
-     */
+      **/
     private Long totalAmount;
 
     /**
      * 商户的还款合同号，其中前五位由PayerMax生成。
-     */
+      **/
     private String referenceNo;
 
     /**
      * 订单号。注：该单号由PayerMax生成。
-     */
+      **/
     private String outTradeNo;
 
     /**
      * 用户真实付款的时间。
-     */
+      **/
     private String completeTime;
 
     /**
      * PayerMax订单号。
-     */
+      **/
     private String tradeToken;
 
     /**
      * 订单币种。
-     */
+      **/
     private String currency;
 
     /**
      * 支付详情。
-     */
+      **/
     private List<PaymentDetails> paymentDetails;
 
     /**
      * 支付状态. PAY_SUCCESS
-     */
+      **/
     private String payStatus;
 
     /**
      * 支付完成时间。
-     */
+      **/
     private String paymentSucceedTime;
 
     /**
      * 付款人邮箱。
-     */
+      **/
     private String payerEmail;
 
     /**
      * 付款人手机号。
-     */
+      **/
     private String payerMobileNumber;
 
     public Long getTotalAmount() {
@@ -166,18 +166,18 @@ public class CollectResultNotifyUrlForBillPaymentRequest extends BaseRequest<Col
     }
     /**
      * 数组元素
-     */
+      **/
     public static final class PaymentDetails implements Serializable {
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
         /**
          * 用户选择的目标机构。
-         */
+          **/
         private String targetOrg;
 
         /**
          * 用户选择的支付方式。
-         */
+          **/
         private String paymentMethodType;
 
         public String getTargetOrg() {

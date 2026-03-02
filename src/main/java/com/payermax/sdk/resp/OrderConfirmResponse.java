@@ -11,12 +11,12 @@ public class OrderConfirmResponse implements Serializable {
 
     /**
      * 商户的还款合同号，其中前五位由PayerMax生成。
-     */
+      **/
     private String referenceNo;
 
     /**
      * PayerMax订单号。
-     */
+      **/
     private String tradeToken;
 
     public String getReferenceNo() {

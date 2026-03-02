@@ -11,32 +11,32 @@ public class BillPaymentValidationUrlResponse implements Serializable {
 
     /**
      * 最小支付金额。
-     */
+      **/
     private Long minAmount;
 
     /**
      * 商户的还款合同号，其中前五位由PayerMax生成。
-     */
+      **/
     private String referenceNo;
 
     /**
      * 校验失败的原因。注意：confirmation为N时，该值必填。
-     */
+      **/
     private String failureReason;
 
     /**
      * 订单币种
-     */
+      **/
     private String currency;
 
     /**
      * 校验结果，"Y"或"N"。
-     */
+      **/
     private String confirmation;
 
     /**
      * 最大支付金额。
-     */
+      **/
     private Long maxAmount;
 
     public Long getMinAmount() {

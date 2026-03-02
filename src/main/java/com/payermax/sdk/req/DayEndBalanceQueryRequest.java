@@ -18,22 +18,22 @@ public class DayEndBalanceQueryRequest extends BaseRequest<DayEndBalanceQueryRes
 
     /**
      * 目前只支持(UTC 、CST)，不区分大小写
-     */
+      **/
     private String timezone;
 
     /**
      *  -ACQUIRING 收单账户 -DISBURSEMENT 代发账户可用余额户 当未指定账户类型时，返回全部
-     */
+      **/
     private List<String> accountType;
 
     /**
      * 符合ISO 4217规范. 当未指定币种时，返回全部
-     */
+      **/
     private String accountCurrency;
 
     /**
      * 支持查询近90天
-     */
+      **/
     private String inquiryDate;
 
     public String getTimezone() {

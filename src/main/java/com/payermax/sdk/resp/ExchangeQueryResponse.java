@@ -11,77 +11,77 @@ public class ExchangeQueryResponse implements Serializable {
 
     /**
      * 交易币种
-     */
+      **/
     private String transactionCcy;
 
     /**
      * 针对交易货币的买卖方向，买入BUY,卖出SELL
-     */
+      **/
     private String side;
 
     /**
      * PayerMax交易流水号
-     */
+      **/
     private String tradeNo;
 
     /**
      * 到账金额
-     */
+      **/
     private String targetAmount;
 
     /**
      * 汇率生成时间
-     */
+      **/
     private String rateTime;
 
     /**
      * 交易完成时间，符合rfc3339规范，格式：yyyy-MM-dd’T’HH:mm:ss.SSSXXX
-     */
+      **/
     private String completeTime;
 
     /**
      * 订单失败错误码
-     */
+      **/
     private String errorCode;
 
     /**
      * 汇率版本号
-     */
+      **/
     private String rateVersion;
 
     /**
      * 目标币种
-     */
+      **/
     private String targetCcy;
 
     /**
      * 订单失败错误码描述
-     */
+      **/
     private String errorMsg;
 
     /**
      * 货币对
-     */
+      **/
     private String ccyPair;
 
     /**
      * 汇率
-     */
+      **/
     private String rate;
 
     /**
      * PayerMax交易流水号
-     */
+      **/
     private String outTradeNo;
 
     /**
      * 交易金额
-     */
+      **/
     private String transactionAmount;
 
     /**
      * 交易状态，SUCCESS成功, FAILED失败,PENDING进行中； 终态才进行回调
-     */
+      **/
     private String status;
 
     public String getTransactionCcy() {

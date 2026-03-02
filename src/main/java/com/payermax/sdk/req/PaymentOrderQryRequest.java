@@ -18,7 +18,7 @@ public class PaymentOrderQryRequest extends BaseRequest<PaymentOrderQryResponse>
 
     /**
      * 原商户订单号
-     */
+      **/
     private String outTradeNo;
 
     public String getOutTradeNo() {

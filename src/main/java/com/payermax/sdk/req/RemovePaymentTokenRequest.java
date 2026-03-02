@@ -16,17 +16,17 @@ public class RemovePaymentTokenRequest extends BaseRequest<RemovePaymentTokenRes
 
     /**
      * PMMax token
-     */
+      **/
     private String paymentTokenID;
 
     /**
      * 解绑原因
-     */
+      **/
     private String removeReason;
 
     /**
      * 商户内部的的用户号，必须唯一
-     */
+      **/
     private String userId;
 
     public String getPaymentTokenID() {

@@ -11,22 +11,22 @@ public class OrderAndPayResponse implements Serializable {
 
     /**
      * 跳转地址	
-     */
+      **/
     private String redirectUrl;
 
     /**
      * 商户订单号	
-     */
+      **/
     private String outTradeNo;
 
     /**
      * PayerMax流水号	
-     */
+      **/
     private String tradeToken;
 
     /**
      * 交易状态，详见交易状态
-     */
+      **/
     private String status;
 
     public String getRedirectUrl() {

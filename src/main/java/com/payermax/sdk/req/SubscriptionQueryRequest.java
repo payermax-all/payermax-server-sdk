@@ -17,12 +17,12 @@ public class SubscriptionQueryRequest extends BaseRequest<SubscriptionQueryRespo
 
     /**
      * 商户创建订阅计划的单号。注：subscriptionNo和requestId至少传一个。
-     */
+      **/
     private String subscriptionRequestId;
 
     /**
      * PMMAX订阅计划号。注：subscriptionNo和requestId必须传一个
-     */
+      **/
     private String subscriptionNo;
 
     public String getSubscriptionRequestId() {

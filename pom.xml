@@ -6,7 +6,7 @@
 
     <groupId>com.payermax</groupId>
     <artifactId>payermax-server-sdk</artifactId>
-    <version>1.0.141</version>
+    <version>1.0.15</version>
 
     <name>payermax-server-sdk</name>
     <url>https://www.payermax.com/</url>
@@ -131,7 +131,7 @@
             <plugin>
                 <groupId>org.sonatype.plugins</groupId>
                 <artifactId>nexus-staging-maven-plugin</artifactId>
-                <version>1.6.7</version>
+                <version>1.6.13</version>
                 <extensions>true</extensions>
                 <configuration>
                     <serverId>ossrh</serverId>

@@ -11,12 +11,12 @@ public class ApplyDDCResponse implements Serializable {
 
     /**
      * 接口orderAndPay时需要携带此字段
-     */
+      **/
     private String ddcSessionId;
 
     /**
      * 加载ddc的地址，商户客户端在隐藏iframe中加载此url
-     */
+      **/
     private String ddcUrl;
 
     public String getDdcSessionId() {

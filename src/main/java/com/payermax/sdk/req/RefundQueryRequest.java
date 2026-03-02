@@ -16,12 +16,12 @@ public class RefundQueryRequest extends BaseRequest<RefundQueryResponse> impleme
 
     /**
      * 原商户退款单号	
-     */
+      **/
     private String outRefundNo;
 
     /**
      * PayerMax退款流水号，与原商户退款单号二选一上送	
-     */
+      **/
     private String refundTradeNo;
 
     public String getOutRefundNo() {

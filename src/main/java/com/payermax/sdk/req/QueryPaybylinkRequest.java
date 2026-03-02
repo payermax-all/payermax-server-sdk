@@ -18,7 +18,7 @@ public class QueryPaybylinkRequest extends BaseRequest<QueryPaybylinkResponse> i
 
     /**
      * 商户链接唯一订单号
-     */
+      **/
     private String merchantLinkId;
 
     public String getMerchantLinkId() {

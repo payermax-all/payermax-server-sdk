@@ -16,37 +16,37 @@ public class InquirePaymentTokenRequest extends BaseRequest<InquirePaymentTokenR
 
     /**
      * 不填默认为tokenAcq
-     */
+      **/
     private String tokenScope;
 
     /**
      * 目标机构，当paymentMethodType=CARD时，该字段不传或传空字符串
-     */
+      **/
     private String targetOrg;
 
     /**
      * 卡组，当paymentMethodType=CARD时，可传VISA、MASTERCARD等卡组
-     */
+      **/
     private String cardOrg;
 
     /**
      * token绑定的唯一标识
-     */
+      **/
     private String referralCode;
 
     /**
      * PMMax token
-     */
+      **/
     private String paymentTokenID;
 
     /**
      * 商户内部的的用户号，必须唯一
-     */
+      **/
     private String userId;
 
     /**
      * 支付方式类型，可传CARD、WALLET等
-     */
+      **/
     private String paymentMethodType;
 
     public String getTokenScope() {

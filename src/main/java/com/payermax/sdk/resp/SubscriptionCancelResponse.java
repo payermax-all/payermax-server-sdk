@@ -11,17 +11,17 @@ public class SubscriptionCancelResponse implements Serializable {
 
     /**
      * 商户创建订阅计划的单号。
-     */
+      **/
     private String subscriptionRequestId;
 
     /**
      * 
-     */
+      **/
     private SubscriptionPlan subscriptionPlan;
 
     /**
      * 用户号。
-     */
+      **/
     private String userId;
 
     public String getSubscriptionRequestId() {
@@ -50,18 +50,18 @@ public class SubscriptionCancelResponse implements Serializable {
 
     /**
      * 嵌套对象
-     */
+      **/
     public static final class SubscriptionPlan implements Serializable {
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
         /**
          * 订阅计划状态。
-         */
+          **/
         private String subscriptionStatus;
 
         /**
          * PMMAX订阅号。
-         */
+          **/
         private String subscriptionNo;
 
         public String getSubscriptionStatus() {

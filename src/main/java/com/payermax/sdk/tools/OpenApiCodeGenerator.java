@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
@@ -25,6 +24,7 @@ public class OpenApiCodeGenerator {
     private static final String OPENAPI_FILE = PROJECT_ROOT + "/api.json";
     private static final String REQ_OUTPUT_DIR = PROJECT_ROOT + "/src/main/java/com/payermax/sdk/req";
     private static final String RESP_OUTPUT_DIR = PROJECT_ROOT + "/src/main/java/com/payermax/sdk/resp";
+    private static final String CALLBACK_OUTPUT_DIR = PROJECT_ROOT + "/src/main/java/com/payermax/sdk/callback";
     private static final String BASE_PACKAGE = "com.payermax.sdk";
 
     // JSON 路径常量
@@ -57,8 +57,6 @@ public class OpenApiCodeGenerator {
     private static final String INTERFACE_NAME_CN = "接口名称：";
     private static final String INTERFACE_NAME_EN = "接口名称:";
     private static final int INTERFACE_NAME_PREFIX_LENGTH = 5;
-    private static final String FILE_SUFFIX_REQUEST = "Request.java";
-    private static final String FILE_SUFFIX_RESPONSE = "Response.java";
     private static final String FILE_EXT_JAVA = ".java";
     private static final String TYPE_ARRAY = "array";
     private static final String TYPE_STRING = "String";
@@ -74,6 +72,13 @@ public class OpenApiCodeGenerator {
     private static final String PATH_API = "api";
     private static final String PATH_GATEWAY = "gateway";
 
+    // 代码生成常量
+    private static final String JAVADOC_START = "/**\n";
+    private static final String JAVADOC_END = " **/\n";
+    private static final String PACKAGE_DECLARATION = "package ";
+    private static final String CLASS_DECLARATION = "public class ";
+    private static final String SERIAL_VERSION_UID = "    private static final long serialVersionUID = 1L;\n\n";
+
     public static void main(String[] args) {
         try {
             System.out.println("开始解析 OpenAPI 文档...");
@@ -85,15 +90,24 @@ public class OpenApiCodeGenerator {
             List<ApiInfo> apis = parseApis(openapi);
             System.out.println("共解析到 " + apis.size() + " 个 API 接口");
 
-            // 获取已存在的类
-            Set<String> existingReqClasses = getExistingClasses(REQ_OUTPUT_DIR, FILE_SUFFIX_REQUEST);
-            Set<String> existingRespClasses = getExistingClasses(RESP_OUTPUT_DIR, FILE_SUFFIX_RESPONSE);
-            System.out.println("已存在 " + existingReqClasses.size() + " 个请求类，" + existingRespClasses.size() + " 个响应类（将被覆盖）");
+            // 分离普通 API 和回调 API
+            List<ApiInfo> normalApis = new ArrayList<>();
+            List<ApiInfo> callbackApis = new ArrayList<>();
+            for (ApiInfo api : apis) {
+                if (isCallbackApi(api.apiName)) {
+                    callbackApis.add(api);
+                } else {
+                    normalApis.add(api);
+                }
+            }
+
+            System.out.println("  - 普通 API: " + normalApis.size() + " 个");
+            System.out.println("  - 回调 API: " + callbackApis.size() + " 个");
 
             // 生成代码
-            generateClasses(apis);
+            generateClasses(normalApis, callbackApis);
 
-            System.out.println("\n完成！共生成 " + apis.size() + " 个新的请求类和响应类");
+            System.out.println("\n完成！共生成 " + normalApis.size() + " 个请求/响应类，" + callbackApis.size() + " 个回调类");
 
         } catch (Exception e) {
             System.err.println("生成失败: " + e.getMessage());
@@ -102,10 +116,11 @@ public class OpenApiCodeGenerator {
     }
 
     /**
-     * 生成所有请求类和响应类
+     * 生成所有请求类、响应类和回调类
      */
-    private static void generateClasses(List<ApiInfo> apis) throws IOException {
-        for (ApiInfo api : apis) {
+    private static void generateClasses(List<ApiInfo> normalApis, List<ApiInfo> callbackApis) throws IOException {
+        // 生成普通请求类和响应类
+        for (ApiInfo api : normalApis) {
             String reqCode = generateRequestClass(api);
             String respCode = generateResponseClass(api);
 
@@ -115,6 +130,25 @@ public class OpenApiCodeGenerator {
             writeFile(Paths.get(REQ_OUTPUT_DIR, reqClassName + FILE_EXT_JAVA), reqCode);
             writeFile(Paths.get(RESP_OUTPUT_DIR, respClassName + FILE_EXT_JAVA), respCode);
         }
+
+        // 生成回调类和 Data 类
+        for (ApiInfo api : callbackApis) {
+            String callbackCode = generateCallbackClass(api);
+            String dataCode = generateCallbackDataClass(api);
+
+            String callbackClassName = getClassName(api.apiName, "Callback");
+            String dataClassName = getClassName(api.apiName, "Data");
+
+            writeFile(Paths.get(CALLBACK_OUTPUT_DIR, callbackClassName + FILE_EXT_JAVA), callbackCode);
+            writeFile(Paths.get(CALLBACK_OUTPUT_DIR, dataClassName + FILE_EXT_JAVA), dataCode);
+        }
+    }
+
+    /**
+     * 判断是否是回调 API
+     */
+    private static boolean isCallbackApi(String apiName) {
+        return apiName.endsWith("NotifyUrl") || apiName.endsWith("notifyUrl");
     }
 
     /**
@@ -142,21 +176,11 @@ public class OpenApiCodeGenerator {
                 String apiName = extractApiName(description, path);
 
                 List<PropertyInfo> properties = extractRequestProperties(details);
-                // 只添加符合条件的 API
-                if (shouldIncludeApi(apiName)) {
-                    apis.add(new ApiInfo(path, method.toUpperCase(), summary, apiName, properties, description, details));
-                }
+                apis.add(new ApiInfo(path, method.toUpperCase(), summary, apiName, properties, description, details));
             }
         }
 
         return apis;
-    }
-
-    /**
-     * 判断是否应该包含该 API（过滤回调通知类接口）
-     */
-    private static boolean shouldIncludeApi(String apiName) {
-        return !apiName.endsWith("NotifyUrl") && !apiName.endsWith("notifyUrl");
     }
 
     /**
@@ -241,6 +265,45 @@ public class OpenApiCodeGenerator {
      */
     private static List<PropertyInfo> extractRequestProperties(JSONObject details) {
         return extractProperties(details.getJSONObject(JSON_REQUEST_BODY));
+    }
+
+    /**
+     * 提取回调接口的 data 属性
+     */
+    private static List<PropertyInfo> extractCallbackDataProperties(JSONObject details) {
+        JSONObject requestBody = details.getJSONObject(JSON_REQUEST_BODY);
+        if (requestBody == null) {
+            return new ArrayList<>();
+        }
+
+        JSONObject content = requestBody.getJSONObject(JSON_CONTENT);
+        if (content == null) {
+            return new ArrayList<>();
+        }
+
+        JSONObject appJson = content.getJSONObject(JSON_APPLICATION_JSON);
+        if (appJson == null) {
+            return new ArrayList<>();
+        }
+
+        JSONObject schema = appJson.getJSONObject(JSON_SCHEMA);
+        if (schema == null) {
+            return new ArrayList<>();
+        }
+
+        JSONObject props = schema.getJSONObject(JSON_PROPERTIES);
+        if (props == null) {
+            return new ArrayList<>();
+        }
+
+        // 只获取 data 属性
+        JSONObject dataProp = props.getJSONObject("data");
+        if (dataProp == null) {
+            return new ArrayList<>();
+        }
+
+        // 提取 data 对象内部的属性
+        return extractPropertiesFromData(dataProp);
     }
 
     /**
@@ -522,7 +585,7 @@ public class OpenApiCodeGenerator {
         Set<String> imports = collectImports(api.properties);
 
         // 生成包声明和导入
-        code.append("package ").append(BASE_PACKAGE).append(".req;\n\n");
+        code.append(PACKAGE_DECLARATION).append(BASE_PACKAGE).append(".req;\n\n");
         code.append(IMPORT_STATEMENT).append(BASE_PACKAGE).append(".api.BaseRequest;\n");
         code.append(IMPORT_STATEMENT).append(BASE_PACKAGE).append(".resp.").append(respClassName).append(";\n");
         for (String imp : imports) {
@@ -534,9 +597,9 @@ public class OpenApiCodeGenerator {
         generateClassComment(code, api, false);
 
         // 生成类声明
-        code.append("public class ").append(className).append(" extends BaseRequest<").append(respClassName)
+        code.append(CLASS_DECLARATION).append(className).append(" extends BaseRequest<").append(respClassName)
             .append("> implements Serializable {\n\n");
-        code.append("    private static final long serialVersionUID = 1L;\n\n");
+        code.append(SERIAL_VERSION_UID);
 
         // 生成属性
         generateFields(code, api.properties);
@@ -567,17 +630,17 @@ public class OpenApiCodeGenerator {
         List<PropertyInfo> responseProperties = extractResponseProperties(api.details);
         Set<String> imports = collectImports(responseProperties);
 
-        code.append("package ").append(BASE_PACKAGE).append(".resp;\n\n");
+        code.append(PACKAGE_DECLARATION).append(BASE_PACKAGE).append(".resp;\n\n");
         for (String imp : imports) {
             code.append(IMPORT_STATEMENT).append(imp).append(";\n");
         }
         code.append("\n");
 
-        code.append("/**\n");
+        code.append(JAVADOC_START);
         code.append(" * ").append(escapeHtml(api.summary)).append(" - 响应\n");
-        code.append(" **/\n");
-        code.append("public class ").append(className).append(" implements Serializable {\n\n");
-        code.append("    private static final long serialVersionUID = 1L;\n\n");
+        code.append(JAVADOC_END);
+        code.append(CLASS_DECLARATION).append(className).append(" implements Serializable {\n\n");
+        code.append(SERIAL_VERSION_UID);
 
         generateFields(code, responseProperties);
         generateAccessors(code, responseProperties);
@@ -588,27 +651,107 @@ public class OpenApiCodeGenerator {
     }
 
     /**
+     * 生成回调类代码
+     */
+    private static String generateCallbackClass(ApiInfo api) {
+        StringBuilder code = new StringBuilder();
+        String className = getClassName(api.apiName, "Callback");
+        String dataClassName = getClassName(api.apiName, "Data");
+
+        code.append(PACKAGE_DECLARATION).append(BASE_PACKAGE).append(".callback;\n\n");
+        // Callback 类只继承 BaseCallback，不需要导入额外的类
+        // Serializable 已经由 BaseCallback 提供
+        code.append("\n");
+
+        // 生成类注释
+        code.append(JAVADOC_START);
+        code.append(" * ").append(escapeHtml(api.summary)).append(" - 回调数据\n");
+        if (api.description != null && !api.description.isEmpty()) {
+            String desc = api.description.length() > MAX_DESCRIPTION_LENGTH
+                ? api.description.substring(0, MAX_DESCRIPTION_LENGTH) + "..."
+                : api.description;
+            code.append(" * ").append(escapeHtml(desc)).append("\n");
+        }
+        code.append(" * \n");
+        code.append(" * <p>注意：这是回调接口的数据对象，用于接收 PayerMax 的回调通知。</p>\n");
+        code.append(" * \n");
+        code.append(" * 回调路径: ").append(escapeHtml(api.path)).append("\n");
+        code.append(JAVADOC_END);
+
+        // 生成类声明，继承 BaseCallback
+        code.append(CLASS_DECLARATION).append(className).append(" extends BaseCallback<").append(dataClassName).append("> {\n\n");
+        code.append(SERIAL_VERSION_UID);
+        code.append("}\n");
+
+        return code.toString();
+    }
+
+    /**
+     * 生成回调 Data 类代码
+     */
+    private static String generateCallbackDataClass(ApiInfo api) {
+        StringBuilder code = new StringBuilder();
+        String dataClassName = getClassName(api.apiName, "Data");
+
+        // 提取 data 属性
+        List<PropertyInfo> dataProperties = extractCallbackDataProperties(api.details);
+        Set<String> imports = collectImports(dataProperties);
+
+        code.append(PACKAGE_DECLARATION).append(BASE_PACKAGE).append(".callback;\n\n");
+        for (String imp : imports) {
+            code.append(IMPORT_STATEMENT).append(imp).append(";\n");
+        }
+        code.append("\n");
+
+        // 生成类注释
+        code.append(JAVADOC_START);
+        code.append(" * ").append(escapeHtml(api.summary)).append(" - Data 数据\n");
+        code.append(JAVADOC_END);
+        code.append(CLASS_DECLARATION).append(dataClassName).append(" implements Serializable {\n\n");
+        code.append(SERIAL_VERSION_UID);
+
+        generateFields(code, dataProperties);
+        generateAccessors(code, dataProperties);
+        generateNestedClasses(code, dataProperties);
+
+        code.append("}\n");
+
+        return code.toString();
+    }
+
+    /**
      * 收集需要导入的类型
      */
     private static Set<String> collectImports(List<PropertyInfo> properties) {
         Set<String> imports = new TreeSet<>();
         imports.add("java.io.Serializable");
 
+        // 递归收集所有属性（包括嵌套属性）中的导入
+        collectImportsRecursive(properties, imports);
+
+        return imports;
+    }
+
+    /**
+     * 递归收集属性中的导入
+     */
+    private static void collectImportsRecursive(List<PropertyInfo> properties, Set<String> imports) {
         for (PropertyInfo prop : properties) {
             if (TYPE_ARRAY.equals(prop.type)) {
                 imports.add("java.util.List");
-                break;
+            }
+            // 递归检查嵌套属性
+            if (prop.hasNestedProperties()) {
+                collectImportsRecursive(prop.nestedProperties, imports);
             }
         }
-
-        return imports;
     }
 
     /**
      * 生成类注释
      */
     private static void generateClassComment(StringBuilder code, ApiInfo api, boolean isResponse) {
-        code.append("/**\n");
+        code.append(JAVADOC_START);
         code.append(" * ").append(escapeHtml(api.summary)).append("\n");
         if (api.description != null && !api.description.isEmpty()) {
             String desc = api.description.length() > MAX_DESCRIPTION_LENGTH
@@ -621,7 +764,7 @@ public class OpenApiCodeGenerator {
             code.append(" * API 路径: ").append(escapeHtml(api.path)).append("\n");
             code.append(" * 请求方法: ").append(api.method).append("\n");
         }
-        code.append(" **/\n");
+        code.append(JAVADOC_END);
     }
 
     /**
@@ -638,9 +781,9 @@ public class OpenApiCodeGenerator {
         String commentIndent = indent + " ";
         for (PropertyInfo prop : properties) {
             String javaType = getJavaType(prop);
-            code.append(indent).append("/**\n");
+            code.append(indent).append(JAVADOC_START);
             code.append(commentIndent).append("* ").append(prop.description != null ? escapeHtml(prop.description) : "").append("\n");
-            code.append(commentIndent).append("*/\n");
+            code.append(commentIndent).append(JAVADOC_END);
             code.append(indent).append("private ").append(javaType).append(" ").append(prop.name).append(";\n\n");
         }
     }
@@ -766,11 +909,11 @@ public class OpenApiCodeGenerator {
         StringBuilder code = new StringBuilder();
         String commentIndent = INDENT_4 + " ";
 
-        code.append(INDENT_4).append("/**\n");
+        code.append(INDENT_4).append(JAVADOC_START);
         code.append(commentIndent).append("* ").append(nestedClass.isItemClass ? "数组元素" : "嵌套对象").append("\n");
-        code.append(commentIndent).append("*/\n");
+        code.append(commentIndent).append(JAVADOC_END);
         code.append(INDENT_4).append("public static final class ").append(nestedClass.className).append(" implements Serializable {\n");
-        code.append(INDENT_8).append("private static final long serialVersionUID = 1L;\n\n");
+        code.append(SERIAL_VERSION_UID);
 
         generateFields(code, nestedClass.properties, INDENT_8);
         generateAccessors(code, nestedClass.properties, INDENT_8);
@@ -870,24 +1013,6 @@ public class OpenApiCodeGenerator {
             writer.write(content);
         }
         System.out.println("生成文件: " + newFilePath);
-    }
-
-    /**
-     * 获取已存在的类（统一处理请求类和响应类）
-     */
-    private static Set<String> getExistingClasses(String dirPath, String fileSuffix) {
-        Set<String> existingClasses = new HashSet<>();
-        File dir = new File(dirPath);
-        if (dir.exists()) {
-            File[] files = dir.listFiles((d, name) -> name.endsWith(fileSuffix));
-            if (files != null) {
-                for (File file : files) {
-                    String className = file.getName().replace(FILE_EXT_JAVA, "");
-                    existingClasses.add(className);
-                }
-            }
-        }
-        return existingClasses;
     }
 
     /**

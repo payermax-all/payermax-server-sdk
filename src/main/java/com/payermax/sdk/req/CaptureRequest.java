@@ -16,22 +16,22 @@ public class CaptureRequest extends BaseRequest<CaptureResponse> implements Seri
 
     /**
      * 请款金额
-     */
+      **/
     private Long amount;
 
     /**
      * 商户请款请求的唯一id
-     */
+      **/
     private String requestId;
 
     /**
      * 商户订单号
-     */
+      **/
     private String outTradeNo;
 
     /**
      * 请款币种
-     */
+      **/
     private String currency;
 
     public Long getAmount() {

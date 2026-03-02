@@ -11,22 +11,22 @@ public class RefundResponse implements Serializable {
 
     /**
      * 商户退款申请号	
-     */
+      **/
     private String outRefundNo;
 
     /**
      * 交易订单号	
-     */
+      **/
     private String tradeOrderNo;
 
     /**
      * PayerMax退款流水号	
-     */
+      **/
     private String refundTradeNo;
 
     /**
      * 退款状态：REFUND_PENDING，REFUND_FAILED	
-     */
+      **/
     private String status;
 
     public String getOutRefundNo() {

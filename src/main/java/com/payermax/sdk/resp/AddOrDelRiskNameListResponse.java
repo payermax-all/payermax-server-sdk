@@ -11,7 +11,7 @@ public class AddOrDelRiskNameListResponse implements Serializable {
 
     /**
      * 请求体中的requestId
-     */
+      **/
     private String requestId;
 
     public String getRequestId() {

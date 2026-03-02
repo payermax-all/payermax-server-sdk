@@ -11,77 +11,77 @@ public class ExchangeResponse implements Serializable {
 
     /**
      * 
-     */
+      **/
     private String transactionCcy;
 
     /**
      * 
-     */
+      **/
     private String side;
 
     /**
      * 
-     */
+      **/
     private String tradeNo;
 
     /**
      * 
-     */
+      **/
     private String targetAmount;
 
     /**
      * 符合rfc3339规范，格式：yyyy-MM-dd’T’HH:mm:ss.SSSXXX
-     */
+      **/
     private String rateTime;
 
     /**
      * 符合rfc3339规范，格式：yyyy-MM-dd'T'HH:mm:ss.SSSXXX
-     */
+      **/
     private String completeTime;
 
     /**
      * 
-     */
+      **/
     private String errorCode;
 
     /**
      * 
-     */
+      **/
     private String rateVersion;
 
     /**
      * 
-     */
+      **/
     private String targetCcy;
 
     /**
      * 
-     */
+      **/
     private String errorMsg;
 
     /**
      * 
-     */
+      **/
     private String ccyPair;
 
     /**
      * 
-     */
+      **/
     private String rate;
 
     /**
      * 
-     */
+      **/
     private String outTradeNo;
 
     /**
      * 
-     */
+      **/
     private String transactionAmount;
 
     /**
      * 
-     */
+      **/
     private String status;
 
     public String getTransactionCcy() {

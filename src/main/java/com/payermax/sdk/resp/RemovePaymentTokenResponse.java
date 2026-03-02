@@ -11,17 +11,17 @@ public class RemovePaymentTokenResponse implements Serializable {
 
     /**
      * PMMax token
-     */
+      **/
     private String paymentTokenID;
 
     /**
      * token状态
-     */
+      **/
     private String paymentTokenStatus;
 
     /**
      * 商户内部的的用户号，必须唯一
-     */
+      **/
     private String userId;
 
     public String getPaymentTokenID() {

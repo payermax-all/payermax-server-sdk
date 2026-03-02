@@ -11,22 +11,22 @@ public class InquireApplyResponse implements Serializable {
 
     /**
      * token认证地址，当status=PENDING时有值
-     */
+      **/
     private String redirectUrl;
 
     /**
      * 请求单号
-     */
+      **/
     private String requestId;
 
     /**
      * token值，当status=SUCCESS时有值
-     */
+      **/
     private String paymentTokenID;
 
     /**
      * 状态
-     */
+      **/
     private String status;
 
     public String getRedirectUrl() {

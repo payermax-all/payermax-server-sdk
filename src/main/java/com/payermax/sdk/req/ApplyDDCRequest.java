@@ -18,32 +18,32 @@ public class ApplyDDCRequest extends BaseRequest<ApplyDDCResponse> implements Se
 
     /**
      * 卡号，明文卡号或GOOGLEPAY解密出来的卡号。和paymentTokenID二选一
-     */
+      **/
     private String cardIdentifierNo;
 
     /**
      * PMMax token ID，授权成功后支付。和cardIdentifierNo二选一
-     */
+      **/
     private String paymentTokenID;
 
     /**
      * 交易币种，大写字母。换汇场景使用换汇后的币种
-     */
+      **/
     private String paymentCurrency;
 
     /**
      * 支付方式类型，枚举值：CARD、GOOGLEPAY
-     */
+      **/
     private String paymentMethodType;
 
     /**
      * 交易金额，金额的单位为元。换汇场景使用换汇后的金额
-     */
+      **/
     private Long paymentAmount;
 
     /**
      * 商户内部的用户Id，&lt;span style="color:red"&gt;需要保证每个ID唯一性&lt;/span&gt;。
-     */
+      **/
     private String userId;
 
     public String getCardIdentifierNo() {
