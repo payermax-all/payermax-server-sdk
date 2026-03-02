@@ -20,12 +20,12 @@ public class QueryClientExchangeRateRequest extends BaseRequest<QueryClientExcha
 
     /**
      * PAY_IN收单 / PAY_OUT付款
-     */
+      **/
     private String product;
 
     /**
      * 最大支持80个货币对
-     */
+      **/
     private List<CcyPairList> ccyPairList;
 
     /**
@@ -36,7 +36,7 @@ public class QueryClientExchangeRateRequest extends BaseRequest<QueryClientExcha
   - 如该字段为空则默认返回当期锁汇汇率
   - 可提前 15min 查询下一期锁汇汇率(此时传送次日日期)
   - 不支持查询历史过期汇率
-     */
+      **/
     private String validTime;
 
     public String getProduct() {
@@ -69,24 +69,24 @@ public class QueryClientExchangeRateRequest extends BaseRequest<QueryClientExcha
     }
     /**
      * 数组元素
-     */
+      **/
     public static final class CcyPairList implements Serializable {
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
         /**
          * 站在客户的视角,对于交易币种的买卖方向
 BUY / SELL
-         */
+          **/
         private String side;
 
         /**
          * 
-         */
+          **/
         private String transactionCurrency;
 
         /**
          * 
-         */
+          **/
         private String targetCurrency;
 
         public String getSide() {

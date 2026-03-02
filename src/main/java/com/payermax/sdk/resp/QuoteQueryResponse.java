@@ -11,7 +11,7 @@ public class QuoteQueryResponse implements Serializable {
 
     /**
      * 
-     */
+      **/
     private String rateList;
 
     public String getRateList() {

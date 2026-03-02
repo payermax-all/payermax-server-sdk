@@ -12,22 +12,22 @@ public class PaymentFieldValidationResponse implements Serializable {
 
     /**
      * 通过校验的字段集合
-     */
+      **/
     private List<ValidationPassedFields> validationPassedFields;
 
     /**
      * 忽略校验的字段集合
-     */
+      **/
     private List<IgnoredFields> ignoredFields;
 
     /**
      * 校验结果码，PASS：没有校验失败的字段，PARAMS_INVALID：存在校验失败的字段
-     */
+      **/
     private String validationCode;
 
     /**
      * 校验失败的字段集合
-     */
+      **/
     private List<ValidationFailedFields> validationFailedFields;
 
     public List<ValidationPassedFields> getValidationPassedFields() {
@@ -64,13 +64,13 @@ public class PaymentFieldValidationResponse implements Serializable {
 
     /**
      * 数组元素
-     */
+      **/
     public static final class ValidationPassedFields implements Serializable {
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
         /**
          * 通过校验的字段路径
-         */
+          **/
         private String field;
 
         public String getField() {
@@ -84,13 +84,13 @@ public class PaymentFieldValidationResponse implements Serializable {
     }
     /**
      * 数组元素
-     */
+      **/
     public static final class IgnoredFields implements Serializable {
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
         /**
          * 忽略校验的字段路径
-         */
+          **/
         private String field;
 
         public String getField() {
@@ -104,18 +104,18 @@ public class PaymentFieldValidationResponse implements Serializable {
     }
     /**
      * 数组元素
-     */
+      **/
     public static final class ValidationFailedFields implements Serializable {
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
         /**
          * 校验失败的字段路径
-         */
+          **/
         private String field;
 
         /**
          * 校验失败原因
-         */
+          **/
         private String errorMsg;
 
         public String getField() {

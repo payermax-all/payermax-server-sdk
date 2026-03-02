@@ -17,7 +17,7 @@ public class OrderQueryRequest extends BaseRequest<OrderQueryResponse> implement
 
     /**
      * 原商户订单号	
-     */
+      **/
     private String outTradeNo;
 
     public String getOutTradeNo() {

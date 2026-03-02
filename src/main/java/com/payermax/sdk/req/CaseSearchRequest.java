@@ -16,7 +16,7 @@ public class CaseSearchRequest extends BaseRequest<CaseSearchResponse> implement
 
     /**
      * 案件编号，示例：O20211118090801
-     */
+      **/
     private String caseId;
 
     public String getCaseId() {

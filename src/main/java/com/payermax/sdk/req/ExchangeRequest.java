@@ -17,37 +17,37 @@ public class ExchangeRequest extends BaseRequest<ExchangeResponse> implements Se
 
     /**
      * 交易货币
-     */
+      **/
     private String transactionCcy;
 
     /**
      * 针对交易货币的买卖方向，买入BUY,卖出SELL
-     */
+      **/
     private String side;
 
     /**
      * 货币对
-     */
+      **/
     private String ccyPair;
 
     /**
      * 商户订单号
-     */
+      **/
     private String outTradeNo;
 
     /**
      * 交易货币金额
-     */
+      **/
     private String transactionAmount;
 
     /**
      * 目标币种
-     */
+      **/
     private String targetCcy;
 
     /**
      * 汇率版本，如果不输入则表示使用最近一次版本进行交易
-     */
+      **/
     private String rateVersion;
 
     public String getTransactionCcy() {

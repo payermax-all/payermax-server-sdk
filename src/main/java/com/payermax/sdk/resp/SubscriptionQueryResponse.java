@@ -12,27 +12,27 @@ public class SubscriptionQueryResponse implements Serializable {
 
     /**
      * 
-     */
+      **/
     private List<SubscriptionPaymentDetails> subscriptionPaymentDetails;
 
     /**
      * 商户创建订阅计划的单号。
-     */
+      **/
     private String subscriptionRequestId;
 
     /**
      * 
-     */
+      **/
     private SubscriptionPlan subscriptionPlan;
 
     /**
      * 用户号。
-     */
+      **/
     private String userId;
 
     /**
      * 商户号。
-     */
+      **/
     private String merchantNo;
 
     public List<SubscriptionPaymentDetails> getSubscriptionPaymentDetails() {
@@ -77,53 +77,53 @@ public class SubscriptionQueryResponse implements Serializable {
 
     /**
      * 数组元素
-     */
+      **/
     public static final class SubscriptionPaymentDetails implements Serializable {
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
         /**
          * 卡组。
-         */
+          **/
         private String cardOrg;
 
         /**
          * 支付金额。
-         */
+          **/
         private PayAmount payAmount;
 
         /**
          * 卡信息	
-         */
+          **/
         private CardInfo cardInfo;
 
         /**
          * 本期最新一次支付详情。
-         */
+          **/
         private LastPaymentInfo lastPaymentInfo;
 
         /**
          * 本期开始时间。如：2025-01-13T15:59:59+0000
-         */
+          **/
         private String periodStartTime;
 
         /**
          * 本期结束时间，如：2025-02-13T15:59:59+0000。
-         */
+          **/
         private String periodEndTime;
 
         /**
          * 扣款期数。
-         */
+          **/
         private Long subscriptionIndex;
 
         /**
          * 支付方式。
-         */
+          **/
         private String paymentMethodType;
 
         /**
          * 本期订单状态。
-         */
+          **/
         private String paymentStatus;
 
         public String getCardOrg() {
@@ -201,18 +201,18 @@ public class SubscriptionQueryResponse implements Serializable {
     }
     /**
      * 嵌套对象
-     */
+      **/
     public static final class PayAmount implements Serializable {
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
         /**
          * 金额。
-         */
+          **/
         private Long amount;
 
         /**
          * 币种。
-         */
+          **/
         private String currency;
 
         public Long getAmount() {
@@ -234,68 +234,68 @@ public class SubscriptionQueryResponse implements Serializable {
     }
     /**
      * 嵌套对象
-     */
+      **/
     public static final class CardInfo implements Serializable {
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
         /**
          * 卡组织，当paymentMethodType为CARD时返回，只有交易成功且用户选择卡组织支付时才返回	
-         */
+          **/
         private String cardOrg;
 
         /**
          * 发卡国家
-         */
+          **/
         private String country;
 
         /**
          * 持卡人姓名，掩码返回。
-         */
+          **/
         private String cardHolderName;
 
         /**
          * 卡有效月。
-         */
+          **/
         private String cardExpirationMonth;
 
         /**
          * 卡类型，DEBIT、CREDIT等。
-         */
+          **/
         private String cardType;
 
         /**
          * 卡的所有卡组织，双标卡会返回两个。
-         */
+          **/
         private List<String> totalCardOrg;
 
         /**
          * 卡有效年。
-         */
+          **/
         private String cardExpirationYear;
 
         /**
          * 卡信息来源。CARD、`APPLEPAY`、`GOOGLEPAY_PAN`、`GOOGLEPAY_CRYPTOGRAM`、`NETWORK_TOKEN`
-         */
+          **/
         private String source;
 
         /**
          * 卡性质。`PAN`为真实卡；`NETWORK_TOKEN`为虚拟卡，如APPLEPAY。
-         */
+          **/
         private String type;
 
         /**
          * 卡号，掩码返回。
-         */
+          **/
         private String cardNumber;
 
         /**
          * 真实卡号后四位。
-         */
+          **/
         private String cardLast4;
 
         /**
          * 卡bin号。
-         */
+          **/
         private String cardBinNo;
 
         public String getCardOrg() {
@@ -397,13 +397,13 @@ public class SubscriptionQueryResponse implements Serializable {
     }
     /**
      * 嵌套对象
-     */
+      **/
     public static final class LastPaymentInfo implements Serializable {
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
         /**
          * 支付时间，如：2025-01-12T15:59:59+0000。
-         */
+          **/
         private String payTime;
 
         /**
@@ -411,23 +411,23 @@ public class SubscriptionQueryResponse implements Serializable {
 PENDING：支付中
 SUCCESS：支付成功
 FAILED：支付失败
-         */
+          **/
         private String lastPaymentStatus;
 
         /**
          * 扣款失败code。
-         */
+          **/
         private String errorCode;
 
         /**
          * 支付单号，可用于退款。
 注：成功时必有该值。
-         */
+          **/
         private String tradeToken;
 
         /**
          * 扣款失败msg。
-         */
+          **/
         private String errorMsg;
 
         public String getPayTime() {
@@ -473,9 +473,9 @@ FAILED：支付失败
     }
     /**
      * 嵌套对象
-     */
+      **/
     public static final class SubscriptionPlan implements Serializable {
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
         /**
          * 订阅计划状态。
@@ -486,12 +486,12 @@ ACTIVE：激活成功
 FINISH：订阅完成
 CANCEL：订阅取消
 TERMINATE：订阅终止
-         */
+          **/
         private String subscriptionStatus;
 
         /**
          * PMMAX订阅号。
-         */
+          **/
         private String subscriptionNo;
 
         public String getSubscriptionStatus() {

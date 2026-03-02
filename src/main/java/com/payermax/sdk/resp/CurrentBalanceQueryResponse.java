@@ -12,22 +12,22 @@ public class CurrentBalanceQueryResponse implements Serializable {
 
     /**
      * 
-     */
+      **/
     private List<AccountRealTimeTypes> accountRealTimeTypes;
 
     /**
      * 符合rfc3339规范，格式：yyyy-MM-dd’T’HH:mm:ss.SSSXXX
-     */
+      **/
     private String inquiryTime;
 
     /**
      * 查询失败错误码
-     */
+      **/
     private String errorCode;
 
     /**
      * 查询失败错误码描述
-     */
+      **/
     private String errorMsg;
 
     public List<AccountRealTimeTypes> getAccountRealTimeTypes() {
@@ -64,23 +64,23 @@ public class CurrentBalanceQueryResponse implements Serializable {
 
     /**
      * 数组元素
-     */
+      **/
     public static final class AccountRealTimeTypes implements Serializable {
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
         /**
          * 单位元
-         */
+          **/
         private Long balance;
 
         /**
          * 
-         */
+          **/
         private String accountType;
 
         /**
          * 符合ISO 4217规范.
-         */
+          **/
         private String currency;
 
         public Long getBalance() {

@@ -17,7 +17,7 @@ public class ExchangeQueryRequest extends BaseRequest<ExchangeQueryResponse> imp
 
     /**
      * 原商户订单号
-     */
+      **/
     private String outTradeNo;
 
     public String getOutTradeNo() {

@@ -11,12 +11,12 @@ public class CaseReplayResponse implements Serializable {
 
     /**
      * 处理成功案件编号
-     */
+      **/
     private String successCaseIds;
 
     /**
      * 处理失败案件编号
-     */
+      **/
     private String failCaseIds;
 
     public String getSuccessCaseIds() {

@@ -17,32 +17,32 @@ public class OrderConfirmRequest extends BaseRequest<OrderConfirmResponse> imple
 
     /**
      * 订单金额。
-     */
+      **/
     private Long amount;
 
     /**
      * 商户的还款合同号，其中前五位由PayerMax生成。
-     */
+      **/
     private String referenceNo;
 
     /**
      * 商户入账确认失败原因。注：confirmation为"N"时，该字段为必填。
-     */
+      **/
     private String failureReason;
 
     /**
      * PayerMax订单号。
-     */
+      **/
     private String tradeToken;
 
     /**
      * 订单币种。
-     */
+      **/
     private String currency;
 
     /**
      * 商户入账确认结果，"Y"或"N"
-     */
+      **/
     private String confirmation;
 
     public Long getAmount() {

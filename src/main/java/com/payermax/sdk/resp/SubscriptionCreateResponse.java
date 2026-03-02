@@ -11,12 +11,12 @@ public class SubscriptionCreateResponse implements Serializable {
 
     /**
      * 商户创建订阅计划的单号。
-     */
+      **/
     private String subscriptionRequestId;
 
     /**
      * 
-     */
+      **/
     private SubscriptionPlan subscriptionPlan;
 
     public String getSubscriptionRequestId() {
@@ -37,9 +37,9 @@ public class SubscriptionCreateResponse implements Serializable {
 
     /**
      * 嵌套对象
-     */
+      **/
     public static final class SubscriptionPlan implements Serializable {
-        private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
         /**
          * 订阅计划状态。
@@ -50,12 +50,12 @@ EXPIRED：过期未激活
 FINISH：订阅完成
 CANCEL：订阅取消
 TERMINATE：订阅终止
-         */
+          **/
         private String subscriptionStatus;
 
         /**
          * PMMAX订阅号
-         */
+          **/
         private String subscriptionNo;
 
         public String getSubscriptionStatus() {

@@ -16,12 +16,12 @@ public class CancelRequest extends BaseRequest<CancelResponse> implements Serial
 
     /**
      * 商户撤销请求的唯一id
-     */
+      **/
     private String requestId;
 
     /**
      * 商户订单号
-     */
+      **/
     private String outTradeNo;
 
     public String getRequestId() {

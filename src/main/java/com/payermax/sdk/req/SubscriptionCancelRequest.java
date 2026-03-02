@@ -19,7 +19,7 @@ public class SubscriptionCancelRequest extends BaseRequest<SubscriptionCancelRes
 
     /**
      * PMMAX订阅计划号。
-     */
+      **/
     private String subscriptionNo;
 
     public String getSubscriptionNo() {

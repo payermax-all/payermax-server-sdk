@@ -1,0 +1,103 @@
+package com.payermax.sdk.callback;
+
+import java.io.Serializable;
+
+/**
+ * 退款通知 - Data 数据
+ **/
+public class RefundResultNotifyUrlData implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
+    /**
+     * 商户退款单号	
+      **/
+    private String outRefundNo;
+
+    /**
+     * 原商户订单号	
+      **/
+    private String outTradeNo;
+
+    /**
+     * 退款币种	
+      **/
+    private String refundCurrency;
+
+    /**
+     * PayerMax退款流水号	
+      **/
+    private String refundTradeNo;
+
+    /**
+     * 退款完成时间，utc+0时区。
+      **/
+    private String refundFinishTime;
+
+    /**
+     * 退款金额，金额的单位为元。
+      **/
+    private Long refundAmount;
+
+    /**
+     * 退款单状态: REFUND_SUCCESS，REFUND_FAILED
+      **/
+    private String status;
+
+    public String getOutRefundNo() {
+        return outRefundNo;
+    }
+
+    public void setOutRefundNo(String outRefundNo) {
+        this.outRefundNo = outRefundNo;
+    }
+
+    public String getOutTradeNo() {
+        return outTradeNo;
+    }
+
+    public void setOutTradeNo(String outTradeNo) {
+        this.outTradeNo = outTradeNo;
+    }
+
+    public String getRefundCurrency() {
+        return refundCurrency;
+    }
+
+    public void setRefundCurrency(String refundCurrency) {
+        this.refundCurrency = refundCurrency;
+    }
+
+    public String getRefundTradeNo() {
+        return refundTradeNo;
+    }
+
+    public void setRefundTradeNo(String refundTradeNo) {
+        this.refundTradeNo = refundTradeNo;
+    }
+
+    public String getRefundFinishTime() {
+        return refundFinishTime;
+    }
+
+    public void setRefundFinishTime(String refundFinishTime) {
+        this.refundFinishTime = refundFinishTime;
+    }
+
+    public Long getRefundAmount() {
+        return refundAmount;
+    }
+
+    public void setRefundAmount(Long refundAmount) {
+        this.refundAmount = refundAmount;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+}

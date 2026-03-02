@@ -16,17 +16,17 @@ public class InquireApplyRequest extends BaseRequest<InquireApplyResponse> imple
 
     /**
      * 固定值：tokenAcq
-     */
+      **/
     private String tokenScope;
 
     /**
      * 请求单号，唯一标识商户的一笔请求
-     */
+      **/
     private String requestId;
 
     /**
      * 商户内部的用户Id，需要保证每个ID唯一性
-     */
+      **/
     private String userId;
 
     public String getTokenScope() {

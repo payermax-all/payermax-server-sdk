@@ -11,47 +11,47 @@ public class CancelResponse implements Serializable {
 
     /**
      * 成功时间
-     */
+      **/
     private String succeededTime;
 
     /**
      * Payermax生成的撤销流水单号
-     */
+      **/
     private String cancelNo;
 
     /**
      * 失败时间
-     */
+      **/
     private String failedTime;
 
     /**
      * 商户请求id
-     */
+      **/
     private String requestId;
 
     /**
      * 商户外部订单号
-     */
+      **/
     private String outTradeNo;
 
     /**
      * 创建时间
-     */
+      **/
     private String createdTime;
 
     /**
      * 失败的错误码
-     */
+      **/
     private String errorCode;
 
     /**
      * 撤销状态。SUCCESS、FAILED 、PENDING
-     */
+      **/
     private String status;
 
     /**
      * 失败的错误msg
-     */
+      **/
     private String errorMsg;
 
     public String getSucceededTime() {

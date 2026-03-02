@@ -11,7 +11,7 @@ public class InquirePaymentTokenResponse implements Serializable {
 
     /**
      * token列表
-     */
+      **/
     private String tokenList;
 
     public String getTokenList() {

@@ -11,62 +11,62 @@ public class CaptureResponse implements Serializable {
 
     /**
      * 请款金额
-     */
+      **/
     private String amount;
 
     /**
      * 成功时间
-     */
+      **/
     private String succeededTime;
 
     /**
      * 失败时间
-     */
+      **/
     private String failedTime;
 
     /**
      * 商户请求id
-     */
+      **/
     private String requestId;
 
     /**
      * 商户外部订单号
-     */
+      **/
     private String outTradeNo;
 
     /**
      * 创建时间
-     */
+      **/
     private String createdTime;
 
     /**
      * 失败的错误码
-     */
+      **/
     private String errorCode;
 
     /**
      * 请款币种
-     */
+      **/
     private String currency;
 
     /**
      * 是否最终请款
-     */
+      **/
     private String isFinal;
 
     /**
      * Payermax生成的请款流水单号
-     */
+      **/
     private String captureNo;
 
     /**
      * 请款状态。SUCCESS、FAILED 、PENDING
-     */
+      **/
     private String status;
 
     /**
      * 失败的错误msg
-     */
+      **/
     private String errorMsg;
 
     public String getAmount() {

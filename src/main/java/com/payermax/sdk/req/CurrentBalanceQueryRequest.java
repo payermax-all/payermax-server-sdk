@@ -18,17 +18,17 @@ public class CurrentBalanceQueryRequest extends BaseRequest<CurrentBalanceQueryR
 
     /**
      *  ACQUIRING 收单账户 -DISBURSEMENT 代发账户 FREEZE   冻结账户 SETTLE   待结算账户 REVERSE  保证金账户 当未指定账户类型时，返回全部不为0的账户
-     */
+      **/
     private List<String> accountType;
 
     /**
      * 是否返回余额为0的账户 true返回 false不返回  默认值: "false"
-     */
+      **/
     private Boolean plainSign;
 
     /**
      * 符合ISO 4217规范. 当未指定币种时，返回全部不为0的账户
-     */
+      **/
     private List<String> accountCurrency;
 
     public List<String> getAccountType() {
