@@ -3,6 +3,7 @@ package com.payermax.sdk.req;
 import com.payermax.sdk.api.BaseRequest;
 import com.payermax.sdk.resp.RefundResponse;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 退款申请
@@ -18,37 +19,37 @@ public class RefundRequest extends BaseRequest<RefundResponse> implements Serial
 
     /**
      * 商户退款申请号，唯一标识一笔退款申请交易
-      **/
+     */
     private String outRefundNo;
 
     /**
      * 退款说明（商户退款理由）	
-      **/
+     */
     private String comments;
 
     /**
      * 原商户订单号，可以传outTradeNo，也可以传tradeToken，不能outTradeNo和tradeToken同时不传
-      **/
+     */
     private String outTradeNo;
 
     /**
      * 退款币种（原交易币种）	
-      **/
+     */
     private String refundCurrency;
 
     /**
      * 正向交易单的交易Token，可以传outTradeNo，也可以传tradeToken，不能outTradeNo和tradeToken同时不传
-      **/
+     */
     private String tradeToken;
 
     /**
      * 退款金额，金额的单位为元。 除以下国家外按照各国币种支持的小数点位（最大四位）上送。 注意：巴林、科威特、伊拉克，约旦、突尼斯、利比亚、奥马尔地区，本币只支持两位小数； 印尼、中国台湾、巴基斯坦、哥伦比亚地区，本币不支持带小数金额。
-      **/
-    private Long refundAmount;
+     */
+    private BigDecimal refundAmount;
 
     /**
      * 退款回调地址，可后台配置配置地址
-      **/
+     */
     private String refundNotifyUrl;
 
     public String getOutRefundNo() {
@@ -91,11 +92,11 @@ public class RefundRequest extends BaseRequest<RefundResponse> implements Serial
         this.tradeToken = tradeToken;
     }
 
-    public Long getRefundAmount() {
+    public BigDecimal getRefundAmount() {
         return refundAmount;
     }
 
-    public void setRefundAmount(Long refundAmount) {
+    public void setRefundAmount(BigDecimal refundAmount) {
         this.refundAmount = refundAmount;
     }
 

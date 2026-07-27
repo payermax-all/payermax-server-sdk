@@ -1,6 +1,7 @@
 package com.payermax.sdk.resp;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 支付成功通知商户 - 响应
@@ -11,39 +12,39 @@ public class CollectResultNotifyUrlForBillPaymentResponse implements Serializabl
 
     /**
      * 订单金额
-      **/
-    private Long amount;
+     */
+    private BigDecimal amount;
 
     /**
      * 商户的还款合同号，其中前五位由PayerMax生成。
-      **/
+     */
     private String referenceNo;
 
     /**
      * 商户入账确认失败的原因。注意：confirmation为N时，该值必填。
-      **/
+     */
     private String failureReason;
 
     /**
      * PayerMax订单号。
-      **/
+     */
     private String tradeToken;
 
     /**
      * 订单币种
-      **/
+     */
     private String currency;
 
     /**
      * 商户入账确认的结果。"Y"或"N"。注：为N时PayerMax不会对该笔做结算。
-      **/
+     */
     private String confirmation;
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
