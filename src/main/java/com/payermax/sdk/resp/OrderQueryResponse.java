@@ -1,6 +1,7 @@
 package com.payermax.sdk.resp;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -12,93 +13,103 @@ public class OrderQueryResponse implements Serializable {
 
     /**
      * 用户支付的国家代码，大写字母	
-      **/
+     */
     private String country;
 
     /**
      * 费用信息，支付成功且存在费用时才返回。
-      **/
+     */
     private Fees fees;
 
     /**
      * 渠道订单号
-      **/
+     */
     private String channelNo;
 
     /**
      * 收银台模式下，在收银台上发起支付的国家。支付成功时返回。
-      **/
+     */
     private String cashierCountry;
 
     /**
      * 交易状态结果描述
-      **/
+     */
     private String resultCode;
 
     /**
      * 订单完成时间
-      **/
+     */
     private String completeTime;
 
     /**
      * 三方单号
-      **/
+     */
     private String thirdChannelNo;
 
     /**
      * 交易状态结果描述,仅失败时有值	
-      **/
+     */
     private String resultMsg;
 
     /**
      * 附加数据，商户上送的值	
-      **/
+     */
     private String reference;
 
     /**
      * 标价金额，金额的单位为元。
-      **/
-    private Long totalAmount;
+     */
+    private BigDecimal totalAmount;
+
+    /**
+     * 发卡行标准错误描述
+     */
+    private String issuerResponseMsg;
 
     /**
      * VA单号
-      **/
+     */
     private String paymentCode;
 
     /**
      * 订单创建时间
-      **/
+     */
     private String createTime;
 
     /**
      * 商户订单号	
-      **/
+     */
     private String outTradeNo;
 
     /**
      * PayerMax交易流水号	
-      **/
+     */
     private String tradeToken;
 
     /**
      * 标价币种
-      **/
+     */
     private String currency;
 
     /**
      * 支付信息，只有交易成功会返回支付信息，当交易失败时返回空数组。
-      **/
+     */
     private List<PaymentDetails> paymentDetails;
 
     /**
      * 订单流转到外部渠道时间点
-      **/
+     */
     private String confirmPayTime;
 
     /**
      * 交易状态，详见交易状态
-      **/
+     */
     private String status;
+
+    /**
+     * 发卡行标准错误码
+     */
+    private String issuerResponseCode;
 
     public String getCountry() {
         return country;
@@ -172,12 +183,20 @@ public class OrderQueryResponse implements Serializable {
         this.reference = reference;
     }
 
-    public Long getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Long totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public String getIssuerResponseMsg() {
+        return issuerResponseMsg;
+    }
+
+    public void setIssuerResponseMsg(String issuerResponseMsg) {
+        this.issuerResponseMsg = issuerResponseMsg;
     }
 
     public String getPaymentCode() {
@@ -244,15 +263,23 @@ public class OrderQueryResponse implements Serializable {
         this.status = status;
     }
 
+    public String getIssuerResponseCode() {
+        return issuerResponseCode;
+    }
+
+    public void setIssuerResponseCode(String issuerResponseCode) {
+        this.issuerResponseCode = issuerResponseCode;
+    }
+
     /**
      * 嵌套对象
-      **/
+     */
     public static final class Fees implements Serializable {
-    private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
         /**
          * 商户税费
-          **/
+         */
         private MerFee merFee;
 
         public MerFee getMerFee() {
@@ -266,23 +293,23 @@ public class OrderQueryResponse implements Serializable {
     }
     /**
      * 嵌套对象
-      **/
+     */
     public static final class MerFee implements Serializable {
-    private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
         /**
          * 费用金额
-          **/
+         */
         private String amount;
 
         /**
          * 费用币种
-          **/
+         */
         private String currency;
 
         /**
          * 发票地址，打开地址可预览发票
-          **/
+         */
         private String url;
 
         public String getAmount() {
@@ -312,43 +339,48 @@ public class OrderQueryResponse implements Serializable {
     }
     /**
      * 数组元素
-      **/
+     */
     public static final class PaymentDetails implements Serializable {
-    private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
         /**
          * 目标机构，用户支付所选择的目标机构; paymentMethodType为CARD的时不返回。
-          **/
+         */
         private String targetOrg;
 
         /**
          * 支付金额
-          **/
-        private Long payAmount;
+         */
+        private BigDecimal payAmount;
 
         /**
          * 卡信息
-          **/
+         */
         private CardInfo cardInfo;
 
         /**
          * 标价币种转换为支付币种的汇率
-          **/
+         */
         private String exchangeRate;
 
         /**
          * 支付币种
-          **/
+         */
         private String payCurrency;
 
         /**
          * 绑卡支付场景下，用于支付的授权ID，默认有效期为卡有效期，可通过removePaymentToken接口置为无效。
-          **/
+         */
         private String paymentTokenID;
 
         /**
+         * 包含有关付款的更多详细信息
+         */
+        private AdditionalData additionalData;
+
+        /**
          * 支付方式类型，参见收银台支付-支付方式类型。
-          **/
+         */
         private String paymentMethodType;
 
         public String getTargetOrg() {
@@ -359,11 +391,11 @@ public class OrderQueryResponse implements Serializable {
             this.targetOrg = targetOrg;
         }
 
-        public Long getPayAmount() {
+        public BigDecimal getPayAmount() {
             return payAmount;
         }
 
-        public void setPayAmount(Long payAmount) {
+        public void setPayAmount(BigDecimal payAmount) {
             this.payAmount = payAmount;
         }
 
@@ -399,6 +431,14 @@ public class OrderQueryResponse implements Serializable {
             this.paymentTokenID = paymentTokenID;
         }
 
+        public AdditionalData getAdditionalData() {
+            return additionalData;
+        }
+
+        public void setAdditionalData(AdditionalData additionalData) {
+            this.additionalData = additionalData;
+        }
+
         public String getPaymentMethodType() {
             return paymentMethodType;
         }
@@ -410,93 +450,93 @@ public class OrderQueryResponse implements Serializable {
     }
     /**
      * 嵌套对象
-      **/
+     */
     public static final class CardInfo implements Serializable {
-    private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
         /**
          * 卡号，当paymentMethodType为CARD时掩码返回
-          **/
+         */
         private String cardIdentifierNo;
 
         /**
          * avs结果
-          **/
+         */
         private String avsResult;
 
         /**
          * 持卡人姓名，掩码返回。
-          **/
+         */
         private String cardHolderName;
 
         /**
          * 卡类型，DEBIT、CREDIT等。
-          **/
+         */
         private String cardType;
 
         /**
          * 3ds结果
-          **/
+         */
         private ThreeDSResult threeDSResult;
 
         /**
          * 卡的所有卡组织，双标卡会返回两个。
-          **/
+         */
         private List<String> totalCardOrg;
 
         /**
          * 发卡国家
-          **/
+         */
         private String country;
 
         /**
          * 绑卡支付场景下，用于支付的授权ID，默认有效期为卡有效期，可通过removePaymentToken接口置为无效。
-          **/
+         */
         private String paymentTokenID;
 
         /**
          * 卡信息来源。`CARD`、`APPLEPAY`、`GOOGLEPAY_PAN`、`GOOGLEPAY_CRYPTOGRAM`、`NETWORK_TOKEN`
-          **/
+         */
         private String source;
 
         /**
          * 卡性质。`PAN`为真实卡；`NETWORK_TOKEN`为虚拟卡，如APPLEPAY。
-          **/
+         */
         private String type;
 
         /**
          * 卡组织，只有交易成功且用户选择卡组织支付时才返回。
-          **/
+         */
         private String cardOrg;
 
         /**
          * 卡有效月。
-          **/
+         */
         private String cardExpirationMonth;
 
         /**
          * 卡有效年。
-          **/
+         */
         private String cardExpirationYear;
 
         /**
          * 卡姓名，当paymentMethodType为CARD时掩码返回
-          **/
+         */
         private String cardIdentifierName;
 
         /**
          * 卡号，掩码返回。
-          **/
+         */
         private String cardNumber;
 
         /**
          * 真实卡号后四位。
-          **/
+         */
         private String cardLast4;
 
         /**
          * 卡bin号。
-          **/
+         */
         private String cardBinNo;
 
         public String getCardIdentifierNo() {
@@ -638,43 +678,43 @@ public class OrderQueryResponse implements Serializable {
     }
     /**
      * 嵌套对象
-      **/
+     */
     public static final class ThreeDSResult implements Serializable {
-    private static final long serialVersionUID = 1L;
+        private static final long serialVersionUID = 1L;
 
         /**
          * Cardholder Authentication Verification Value (CAVV) Authentication Verification Value (AVV) Universal Cardholder Authentication Field (UCAF)
-          **/
+         */
         private String cavv;
 
         /**
          * 身份验证结果标识	
-          **/
+         */
         private String xid;
 
         /**
          * the Directory Server (DS)分配的唯一标识	
-          **/
+         */
         private String dsTransactionId;
 
         /**
          * Electronic Commerce Indicator (ECI). Possible Values: 02 or 05 - Fully Authenticated Transaction 01 or 06 - Attempted Authentication Transaction 00 or 07 - Non 3-D Secure Transaction Mastercard - 02, 01, 00 Visa - 05, 06, 07
-          **/
+         */
         private String eci;
 
         /**
          * 3ds版本 1.0.2, 2.1.0, 2.2.0
-          **/
+         */
         private String threeDSVersion;
 
         /**
          * Status of Authentication eligibility. Y - Yes, Bank is participating in 3-D Secure protocol and will return the ACSUrl N - No, Bank is not participating in 3-D Secure protocol U - Unavailable, The DS or ACS is not available for authentication at the time of the request B - Bypass, Merchant authentication rule is triggered to bypass authentication in this use case. (3DS Flex premium only)
-          **/
+         */
         private String enrolled;
 
         /**
          * Transactions status result identifier. Y - Successful Authentication N - Failed Authentication U - Unable to Complete Authentication A - Successful Attempts Transaction R - Authentication Rejected (Merchant must not submit for authorisation)
-          **/
+         */
         private String authenticationStatus;
 
         public String getCavv() {
@@ -731,6 +771,39 @@ public class OrderQueryResponse implements Serializable {
 
         public void setAuthenticationStatus(String authenticationStatus) {
             this.authenticationStatus = authenticationStatus;
+        }
+
+    }
+    /**
+     * 嵌套对象
+     */
+    public static final class AdditionalData implements Serializable {
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * 发卡行授权码
+         */
+        private String authCode;
+
+        /**
+         * 交易检索号
+         */
+        private String rrn;
+
+        public String getAuthCode() {
+            return authCode;
+        }
+
+        public void setAuthCode(String authCode) {
+            this.authCode = authCode;
+        }
+
+        public String getRrn() {
+            return rrn;
+        }
+
+        public void setRrn(String rrn) {
+            this.rrn = rrn;
         }
 
     }

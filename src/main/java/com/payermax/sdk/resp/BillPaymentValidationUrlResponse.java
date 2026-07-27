@@ -1,6 +1,7 @@
 package com.payermax.sdk.resp;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 账单支付校验接口 - 响应
@@ -11,39 +12,39 @@ public class BillPaymentValidationUrlResponse implements Serializable {
 
     /**
      * 最小支付金额。
-      **/
-    private Long minAmount;
+     */
+    private BigDecimal minAmount;
 
     /**
      * 商户的还款合同号，其中前五位由PayerMax生成。
-      **/
+     */
     private String referenceNo;
 
     /**
      * 校验失败的原因。注意：confirmation为N时，该值必填。
-      **/
+     */
     private String failureReason;
 
     /**
      * 订单币种
-      **/
+     */
     private String currency;
 
     /**
      * 校验结果，"Y"或"N"。
-      **/
+     */
     private String confirmation;
 
     /**
      * 最大支付金额。
-      **/
-    private Long maxAmount;
+     */
+    private BigDecimal maxAmount;
 
-    public Long getMinAmount() {
+    public BigDecimal getMinAmount() {
         return minAmount;
     }
 
-    public void setMinAmount(Long minAmount) {
+    public void setMinAmount(BigDecimal minAmount) {
         this.minAmount = minAmount;
     }
 
@@ -79,11 +80,11 @@ public class BillPaymentValidationUrlResponse implements Serializable {
         this.confirmation = confirmation;
     }
 
-    public Long getMaxAmount() {
+    public BigDecimal getMaxAmount() {
         return maxAmount;
     }
 
-    public void setMaxAmount(Long maxAmount) {
+    public void setMaxAmount(BigDecimal maxAmount) {
         this.maxAmount = maxAmount;
     }
 

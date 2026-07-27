@@ -17,27 +17,27 @@ public class CaseReplayRequest extends BaseRequest<CaseReplayResponse> implement
 
     /**
      * 案件编号，单笔调单回复时必填，批量调单回复时必须为空，示例：O20211118090801
-      **/
+     */
     private String caseId;
 
     /**
      * 案件批次号，批量调单回复时必填,单笔调单回复时必须为空，示例：P20210702104937
-      **/
+     */
     private String batchId;
 
     /**
      * 用户号，示例：ZNW3e
-      **/
+     */
     private String outUserId;
 
     /**
      * 回复内容信息
-      **/
+     */
     private String responseContent;
 
     /**
-     * 文件名称以案件批次号或案件编号命名，商户回复材料下载链接地址需填入此字段，示例：[“http://xxx/O20211118090801.ZIP“, “http://xxx/O20211118090802.ZIP“]
-      **/
+     * 文件列表里的每个文件的文件地址请以`文件名.扩展名`结尾，不包含中文和特殊符号，文件类型支持 PNG、JPG、ZIP、DOC、XLS、PDF，推荐以案件编号作为文件名便于后续追溯管理。完整URL示例：["http://xxx/O20211118090801.ZIP", "http://xxx/O20211118090802.PDF"]。
+     */
     private List<String> representmentFile;
 
     public String getCaseId() {
