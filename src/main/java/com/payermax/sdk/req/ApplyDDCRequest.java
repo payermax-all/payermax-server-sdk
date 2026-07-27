@@ -3,6 +3,7 @@ package com.payermax.sdk.req;
 import com.payermax.sdk.api.BaseRequest;
 import com.payermax.sdk.resp.ApplyDDCResponse;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 纯API支付DDC申请
@@ -39,7 +40,7 @@ public class ApplyDDCRequest extends BaseRequest<ApplyDDCResponse> implements Se
     /**
      * 交易金额，金额的单位为元。换汇场景使用换汇后的金额
      */
-    private Long paymentAmount;
+    private BigDecimal paymentAmount;
 
     /**
      * 商户内部的用户Id，&lt;span style="color:red"&gt;需要保证每个ID唯一性&lt;/span&gt;。
@@ -78,11 +79,11 @@ public class ApplyDDCRequest extends BaseRequest<ApplyDDCResponse> implements Se
         this.paymentMethodType = paymentMethodType;
     }
 
-    public Long getPaymentAmount() {
+    public BigDecimal getPaymentAmount() {
         return paymentAmount;
     }
 
-    public void setPaymentAmount(Long paymentAmount) {
+    public void setPaymentAmount(BigDecimal paymentAmount) {
         this.paymentAmount = paymentAmount;
     }
 

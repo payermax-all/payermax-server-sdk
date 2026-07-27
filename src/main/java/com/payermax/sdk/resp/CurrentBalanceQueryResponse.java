@@ -1,6 +1,7 @@
 package com.payermax.sdk.resp;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -71,7 +72,7 @@ public class CurrentBalanceQueryResponse implements Serializable {
         /**
          * 单位元
          */
-        private Long balance;
+        private BigDecimal balance;
 
         /**
          * 
@@ -83,11 +84,11 @@ public class CurrentBalanceQueryResponse implements Serializable {
          */
         private String currency;
 
-        public Long getBalance() {
+        public BigDecimal getBalance() {
             return balance;
         }
 
-        public void setBalance(Long balance) {
+        public void setBalance(BigDecimal balance) {
             this.balance = balance;
         }
 

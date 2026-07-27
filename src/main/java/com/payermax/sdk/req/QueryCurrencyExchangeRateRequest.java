@@ -1,51 +1,25 @@
 package com.payermax.sdk.req;
 
 import com.payermax.sdk.api.BaseRequest;
-import com.payermax.sdk.resp.QueryClientExchangeRateResponse;
+import com.payermax.sdk.resp.QueryCurrencyExchangeRateResponse;
 import java.io.Serializable;
 import java.util.List;
 
 /**
- * 收单/付款汇率查询
- * 本接口支持根据收单或付款业务查询相应的汇率信息，为您的外汇交易决策提供参考。请注意，查询到的汇率仅供参考，不构成交易承诺。
-注：调用此接口前，请确保您已开通相关的业务产品服务。
-
+ * 自由换汇汇率查询
+ * 支持查询资金账户换汇场景汇率
  *
- * API 路径: /aggregate-pay/api/gateway/queryClientExchangeRate
+ * API 路径: /aggregate-pay/api/gateway/queryCurrencyExchangeRate
  * 请求方法: POST
  **/
-public class QueryClientExchangeRateRequest extends BaseRequest<QueryClientExchangeRateResponse> implements Serializable {
+public class QueryCurrencyExchangeRateRequest extends BaseRequest<QueryCurrencyExchangeRateResponse> implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 业务产品类型，PAY_IN收单 / PAY_OUT付款
-     */
-    private String product;
-
-    /**
-     * 货币对列表，最大支持40个货币对
+     * 币种对列表
      */
     private List<CcyPairList> ccyPairList;
-
-    /**
-     * 指定查询汇率的日期，格式: yyyyMMdd
-此字段仅适用于收单锁汇场景
-- 未开通锁汇情况下该字段无效(默认返回当前汇率)
-- 收单锁汇场景
-  - 如该字段为空则默认返回当期锁汇汇率
-  - 可提前 15min 查询下一期锁汇汇率(此时传送次日日期)
-  - 不支持查询历史过期汇率
-     */
-    private String validTime;
-
-    public String getProduct() {
-        return product;
-    }
-
-    public void setProduct(String product) {
-        this.product = product;
-    }
 
     public List<CcyPairList> getCcyPairList() {
         return ccyPairList;
@@ -55,17 +29,9 @@ public class QueryClientExchangeRateRequest extends BaseRequest<QueryClientExcha
         this.ccyPairList = ccyPairList;
     }
 
-    public String getValidTime() {
-        return validTime;
-    }
-
-    public void setValidTime(String validTime) {
-        this.validTime = validTime;
-    }
-
     @Override
     protected String getApiName() {
-        return "queryClientExchangeRate";
+        return "queryCurrencyExchangeRate";
     }
     /**
      * 数组元素
@@ -74,8 +40,7 @@ public class QueryClientExchangeRateRequest extends BaseRequest<QueryClientExcha
         private static final long serialVersionUID = 1L;
 
         /**
-         * 买卖方向，站在客户的视角,对于交易币种的买卖方向
-BUY / SELL
+         * 对于交易币种的买卖方向
          */
         private String side;
 

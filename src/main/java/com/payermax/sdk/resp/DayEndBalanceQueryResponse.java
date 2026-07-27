@@ -1,6 +1,7 @@
 package com.payermax.sdk.resp;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -84,18 +85,18 @@ public class DayEndBalanceQueryResponse implements Serializable {
         /**
          * 当日内流入金额
          */
-        private Long inflowAmount;
+        private BigDecimal inflowAmount;
 
         /**
          * 
          */
-        private Long initalBalance;
+        private BigDecimal initalBalance;
 
         /**
          * 计算公式
 endBalance = initalBalance+ inflowAmount - outflowAmount
          */
-        private Long endBalance;
+        private BigDecimal endBalance;
 
         /**
          * 
@@ -110,29 +111,29 @@ endBalance = initalBalance+ inflowAmount - outflowAmount
         /**
          * 当日内流出金额
          */
-        private Long outflowAmount;
+        private BigDecimal outflowAmount;
 
-        public Long getInflowAmount() {
+        public BigDecimal getInflowAmount() {
             return inflowAmount;
         }
 
-        public void setInflowAmount(Long inflowAmount) {
+        public void setInflowAmount(BigDecimal inflowAmount) {
             this.inflowAmount = inflowAmount;
         }
 
-        public Long getInitalBalance() {
+        public BigDecimal getInitalBalance() {
             return initalBalance;
         }
 
-        public void setInitalBalance(Long initalBalance) {
+        public void setInitalBalance(BigDecimal initalBalance) {
             this.initalBalance = initalBalance;
         }
 
-        public Long getEndBalance() {
+        public BigDecimal getEndBalance() {
             return endBalance;
         }
 
-        public void setEndBalance(Long endBalance) {
+        public void setEndBalance(BigDecimal endBalance) {
             this.endBalance = endBalance;
         }
 
@@ -152,11 +153,11 @@ endBalance = initalBalance+ inflowAmount - outflowAmount
             this.currency = currency;
         }
 
-        public Long getOutflowAmount() {
+        public BigDecimal getOutflowAmount() {
             return outflowAmount;
         }
 
-        public void setOutflowAmount(Long outflowAmount) {
+        public void setOutflowAmount(BigDecimal outflowAmount) {
             this.outflowAmount = outflowAmount;
         }
 

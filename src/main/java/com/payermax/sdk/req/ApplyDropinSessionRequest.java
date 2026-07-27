@@ -18,7 +18,7 @@ public class ApplyDropinSessionRequest extends BaseRequest<ApplyDropinSessionRes
     private static final long serialVersionUID = 1L;
 
     /**
-     * 非必填，如果需要传值，则只有传了mitType时，totalAmount才支持传0；其他情况需要大于0
+     * 只有传了mitType时，totalAmount才支持传0；其他情况需要大于0
      */
     private String totalAmount;
 

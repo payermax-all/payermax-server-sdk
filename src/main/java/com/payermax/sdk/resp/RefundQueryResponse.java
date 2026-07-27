@@ -1,6 +1,7 @@
 package com.payermax.sdk.resp;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 退款查询 - 响应
@@ -37,7 +38,7 @@ public class RefundQueryResponse implements Serializable {
     /**
      * 退款金额，金额的单位为元。	
      */
-    private Long refundAmount;
+    private BigDecimal refundAmount;
 
     /**
      * 退款单状态，详见退款状态	
@@ -89,11 +90,11 @@ public class RefundQueryResponse implements Serializable {
         this.refundFinishTime = refundFinishTime;
     }
 
-    public Long getRefundAmount() {
+    public BigDecimal getRefundAmount() {
         return refundAmount;
     }
 
-    public void setRefundAmount(Long refundAmount) {
+    public void setRefundAmount(BigDecimal refundAmount) {
         this.refundAmount = refundAmount;
     }
 

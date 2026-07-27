@@ -1,6 +1,7 @@
 package com.payermax.sdk.resp;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 支付成功通知商户 - 响应
@@ -12,7 +13,7 @@ public class CollectResultNotifyUrlForBillPaymentResponse implements Serializabl
     /**
      * 订单金额
      */
-    private Long amount;
+    private BigDecimal amount;
 
     /**
      * 商户的还款合同号，其中前五位由PayerMax生成。
@@ -39,11 +40,11 @@ public class CollectResultNotifyUrlForBillPaymentResponse implements Serializabl
      */
     private String confirmation;
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

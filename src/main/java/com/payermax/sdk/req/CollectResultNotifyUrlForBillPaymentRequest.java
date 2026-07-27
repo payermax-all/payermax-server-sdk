@@ -3,6 +3,7 @@ package com.payermax.sdk.req;
 import com.payermax.sdk.api.BaseRequest;
 import com.payermax.sdk.resp.CollectResultNotifyUrlForBillPaymentResponse;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -20,7 +21,7 @@ public class CollectResultNotifyUrlForBillPaymentRequest extends BaseRequest<Col
     /**
      * 订单金额。
      */
-    private Long totalAmount;
+    private BigDecimal totalAmount;
 
     /**
      * 商户的还款合同号，其中前五位由PayerMax生成。
@@ -72,11 +73,11 @@ public class CollectResultNotifyUrlForBillPaymentRequest extends BaseRequest<Col
      */
     private String payerMobileNumber;
 
-    public Long getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Long totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
 

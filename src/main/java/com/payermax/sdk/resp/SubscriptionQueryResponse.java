@@ -1,6 +1,7 @@
 package com.payermax.sdk.resp;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -114,7 +115,7 @@ public class SubscriptionQueryResponse implements Serializable {
         /**
          * 扣款期数。
          */
-        private Long subscriptionIndex;
+        private BigDecimal subscriptionIndex;
 
         /**
          * 支付方式。
@@ -174,11 +175,11 @@ public class SubscriptionQueryResponse implements Serializable {
             this.periodEndTime = periodEndTime;
         }
 
-        public Long getSubscriptionIndex() {
+        public BigDecimal getSubscriptionIndex() {
             return subscriptionIndex;
         }
 
-        public void setSubscriptionIndex(Long subscriptionIndex) {
+        public void setSubscriptionIndex(BigDecimal subscriptionIndex) {
             this.subscriptionIndex = subscriptionIndex;
         }
 
@@ -208,18 +209,18 @@ public class SubscriptionQueryResponse implements Serializable {
         /**
          * 金额。
          */
-        private Long amount;
+        private BigDecimal amount;
 
         /**
          * 币种。
          */
         private String currency;
 
-        public Long getAmount() {
+        public BigDecimal getAmount() {
             return amount;
         }
 
-        public void setAmount(Long amount) {
+        public void setAmount(BigDecimal amount) {
             this.amount = amount;
         }
 

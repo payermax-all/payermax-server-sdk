@@ -593,15 +593,26 @@ public class OpenApiCodeGenerator {
     private static Set<String> collectImports(List<PropertyInfo> properties) {
         Set<String> imports = new TreeSet<>();
         imports.add("java.io.Serializable");
+        collectImportsRecursive(properties, imports);
+        return imports;
+    }
 
+    /**
+     * 递归收集需要导入的类型（包括嵌套属性）
+     */
+    private static void collectImportsRecursive(List<PropertyInfo> properties, Set<String> imports) {
         for (PropertyInfo prop : properties) {
-            if (TYPE_ARRAY.equals(prop.type)) {
+            String javaType = getJavaType(prop);
+            if (javaType.startsWith("List<")) {
                 imports.add("java.util.List");
-                break;
+            }
+            if (javaType.contains("BigDecimal")) {
+                imports.add("java.math.BigDecimal");
+            }
+            if (prop.hasNestedProperties()) {
+                collectImportsRecursive(prop.nestedProperties, imports);
             }
         }
-
-        return imports;
     }
 
     /**
@@ -828,7 +839,7 @@ public class OpenApiCodeGenerator {
             case "integer":
                 return "Integer";
             case "number":
-                return "Long";
+                return "BigDecimal";
             case "boolean":
                 return "Boolean";
             case TYPE_ARRAY:

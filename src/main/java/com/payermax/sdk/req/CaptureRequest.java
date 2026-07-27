@@ -3,6 +3,7 @@ package com.payermax.sdk.req;
 import com.payermax.sdk.api.BaseRequest;
 import com.payermax.sdk.resp.CaptureResponse;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 请款
@@ -17,7 +18,7 @@ public class CaptureRequest extends BaseRequest<CaptureResponse> implements Seri
     /**
      * 请款金额
      */
-    private Long amount;
+    private BigDecimal amount;
 
     /**
      * 商户请款请求的唯一id
@@ -34,11 +35,11 @@ public class CaptureRequest extends BaseRequest<CaptureResponse> implements Seri
      */
     private String currency;
 
-    public Long getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(Long amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 

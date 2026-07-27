@@ -1,6 +1,7 @@
 package com.payermax.sdk.resp;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -58,7 +59,12 @@ public class OrderQueryResponse implements Serializable {
     /**
      * 标价金额，金额的单位为元。
      */
-    private Long totalAmount;
+    private BigDecimal totalAmount;
+
+    /**
+     * 发卡行标准错误描述
+     */
+    private String issuerResponseMsg;
 
     /**
      * VA单号
@@ -99,6 +105,11 @@ public class OrderQueryResponse implements Serializable {
      * 交易状态，详见交易状态
      */
     private String status;
+
+    /**
+     * 发卡行标准错误码
+     */
+    private String issuerResponseCode;
 
     public String getCountry() {
         return country;
@@ -172,12 +183,20 @@ public class OrderQueryResponse implements Serializable {
         this.reference = reference;
     }
 
-    public Long getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Long totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
+    }
+
+    public String getIssuerResponseMsg() {
+        return issuerResponseMsg;
+    }
+
+    public void setIssuerResponseMsg(String issuerResponseMsg) {
+        this.issuerResponseMsg = issuerResponseMsg;
     }
 
     public String getPaymentCode() {
@@ -242,6 +261,14 @@ public class OrderQueryResponse implements Serializable {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getIssuerResponseCode() {
+        return issuerResponseCode;
+    }
+
+    public void setIssuerResponseCode(String issuerResponseCode) {
+        this.issuerResponseCode = issuerResponseCode;
     }
 
     /**
@@ -324,7 +351,7 @@ public class OrderQueryResponse implements Serializable {
         /**
          * 支付金额
          */
-        private Long payAmount;
+        private BigDecimal payAmount;
 
         /**
          * 卡信息
@@ -347,6 +374,11 @@ public class OrderQueryResponse implements Serializable {
         private String paymentTokenID;
 
         /**
+         * 包含有关付款的更多详细信息
+         */
+        private AdditionalData additionalData;
+
+        /**
          * 支付方式类型，参见收银台支付-支付方式类型。
          */
         private String paymentMethodType;
@@ -359,11 +391,11 @@ public class OrderQueryResponse implements Serializable {
             this.targetOrg = targetOrg;
         }
 
-        public Long getPayAmount() {
+        public BigDecimal getPayAmount() {
             return payAmount;
         }
 
-        public void setPayAmount(Long payAmount) {
+        public void setPayAmount(BigDecimal payAmount) {
             this.payAmount = payAmount;
         }
 
@@ -397,6 +429,14 @@ public class OrderQueryResponse implements Serializable {
 
         public void setPaymentTokenID(String paymentTokenID) {
             this.paymentTokenID = paymentTokenID;
+        }
+
+        public AdditionalData getAdditionalData() {
+            return additionalData;
+        }
+
+        public void setAdditionalData(AdditionalData additionalData) {
+            this.additionalData = additionalData;
         }
 
         public String getPaymentMethodType() {
@@ -731,6 +771,39 @@ public class OrderQueryResponse implements Serializable {
 
         public void setAuthenticationStatus(String authenticationStatus) {
             this.authenticationStatus = authenticationStatus;
+        }
+
+    }
+    /**
+     * 嵌套对象
+     */
+    public static final class AdditionalData implements Serializable {
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * 发卡行授权码
+         */
+        private String authCode;
+
+        /**
+         * 交易检索号
+         */
+        private String rrn;
+
+        public String getAuthCode() {
+            return authCode;
+        }
+
+        public void setAuthCode(String authCode) {
+            this.authCode = authCode;
+        }
+
+        public String getRrn() {
+            return rrn;
+        }
+
+        public void setRrn(String rrn) {
+            this.rrn = rrn;
         }
 
     }

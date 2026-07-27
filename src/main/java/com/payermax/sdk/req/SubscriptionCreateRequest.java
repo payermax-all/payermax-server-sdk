@@ -3,6 +3,8 @@ package com.payermax.sdk.req;
 import com.payermax.sdk.api.BaseRequest;
 import com.payermax.sdk.resp.SubscriptionCreateResponse;
 import java.io.Serializable;
+import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * 创建订阅计划
@@ -78,7 +80,7 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
         private static final long serialVersionUID = 1L;
 
         /**
-         * 每期扣款金额。
+         * 每期扣款金额。当填写prices后，periodAmount不用填写，否则periodAmount必填
          */
         private PeriodAmount periodAmount;
 
@@ -98,24 +100,24 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
         private TrialConfig trialConfig;
 
         /**
-         * 后续的每期扣款提前发起的天数。如advanceDays=2表示提前2天开始发起扣款。
-         */
-        private Long advanceDays;
-
-        /**
          * 描述。
          */
         private String description;
 
         /**
-         * 扣款规则。
+         * 扣款规则。当填写prices后，periodRule不用填写，否则periodRule必填
          */
         private PeriodRule periodRule;
 
         /**
+         * 价格和坐席列表
+         */
+        private List<Prices> prices;
+
+        /**
          * 总期数。
          */
-        private Long totalPeriods;
+        private BigDecimal totalPeriods;
 
         /**
          * 优惠期配置。
@@ -154,14 +156,6 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
             this.trialConfig = trialConfig;
         }
 
-        public Long getAdvanceDays() {
-            return advanceDays;
-        }
-
-        public void setAdvanceDays(Long advanceDays) {
-            this.advanceDays = advanceDays;
-        }
-
         public String getDescription() {
             return description;
         }
@@ -178,11 +172,19 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
             this.periodRule = periodRule;
         }
 
-        public Long getTotalPeriods() {
+        public List<Prices> getPrices() {
+            return prices;
+        }
+
+        public void setPrices(List<Prices> prices) {
+            this.prices = prices;
+        }
+
+        public BigDecimal getTotalPeriods() {
             return totalPeriods;
         }
 
-        public void setTotalPeriods(Long totalPeriods) {
+        public void setTotalPeriods(BigDecimal totalPeriods) {
             this.totalPeriods = totalPeriods;
         }
 
@@ -204,18 +206,18 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
         /**
          * 金额。
          */
-        private Long amount;
+        private BigDecimal amount;
 
         /**
          * 币种。
          */
         private String currency;
 
-        public Long getAmount() {
+        public BigDecimal getAmount() {
             return amount;
         }
 
-        public void setAmount(Long amount) {
+        public void setAmount(BigDecimal amount) {
             this.amount = amount;
         }
 
@@ -237,18 +239,18 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
         /**
          * 试用天数
          */
-        private Long trialDays;
+        private BigDecimal trialDays;
 
         /**
          * 试用期金额信息
          */
         private TrialAmount trialAmount;
 
-        public Long getTrialDays() {
+        public BigDecimal getTrialDays() {
             return trialDays;
         }
 
-        public void setTrialDays(Long trialDays) {
+        public void setTrialDays(BigDecimal trialDays) {
             this.trialDays = trialDays;
         }
 
@@ -270,18 +272,18 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
         /**
          * 试用期金额
          */
-        private Long amount;
+        private BigDecimal amount;
 
         /**
          * 试用期币种
          */
         private String currency;
 
-        public Long getAmount() {
+        public BigDecimal getAmount() {
             return amount;
         }
 
-        public void setAmount(Long amount) {
+        public void setAmount(BigDecimal amount) {
             this.amount = amount;
         }
 
@@ -303,18 +305,18 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
         /**
          * 扣款频次。如periodUnit=M、periodCount=1表示每1个月扣款一次。
          */
-        private Long periodCount;
+        private BigDecimal periodCount;
 
         /**
          * 按M（月），D(日)，W（周），Y（年）扣款。
          */
         private String periodUnit;
 
-        public Long getPeriodCount() {
+        public BigDecimal getPeriodCount() {
             return periodCount;
         }
 
-        public void setPeriodCount(Long periodCount) {
+        public void setPeriodCount(BigDecimal periodCount) {
             this.periodCount = periodCount;
         }
 
@@ -328,6 +330,39 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
 
     }
     /**
+     * 数组元素
+     */
+    public static final class Prices implements Serializable {
+        private static final long serialVersionUID = 1L;
+
+        /**
+         * 坐席或数量
+         */
+        private BigDecimal quantity;
+
+        /**
+         * 价格ID
+         */
+        private String priceId;
+
+        public BigDecimal getQuantity() {
+            return quantity;
+        }
+
+        public void setQuantity(BigDecimal quantity) {
+            this.quantity = quantity;
+        }
+
+        public String getPriceId() {
+            return priceId;
+        }
+
+        public void setPriceId(String priceId) {
+            this.priceId = priceId;
+        }
+
+    }
+    /**
      * 嵌套对象
      */
     public static final class TrialPeriodConfig implements Serializable {
@@ -336,18 +371,18 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
         /**
          * 优惠期数。
          */
-        private Long trialPeriodCount;
+        private BigDecimal trialPeriodCount;
 
         /**
          * 优惠期扣款金额。
          */
         private TrialPeriodAmount trialPeriodAmount;
 
-        public Long getTrialPeriodCount() {
+        public BigDecimal getTrialPeriodCount() {
             return trialPeriodCount;
         }
 
-        public void setTrialPeriodCount(Long trialPeriodCount) {
+        public void setTrialPeriodCount(BigDecimal trialPeriodCount) {
             this.trialPeriodCount = trialPeriodCount;
         }
 
@@ -369,18 +404,18 @@ public class SubscriptionCreateRequest extends BaseRequest<SubscriptionCreateRes
         /**
          * 金额。
          */
-        private Long amount;
+        private BigDecimal amount;
 
         /**
          * 币种。
          */
         private String currency;
 
-        public Long getAmount() {
+        public BigDecimal getAmount() {
             return amount;
         }
 
-        public void setAmount(Long amount) {
+        public void setAmount(BigDecimal amount) {
             this.amount = amount;
         }
 

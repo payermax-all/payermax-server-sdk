@@ -5,55 +5,53 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * 收单/付款汇率查询 - 响应
+ * 自由换汇汇率查询 - 响应
  **/
-public class QueryClientExchangeRateResponse implements Serializable {
+public class QueryCurrencyExchangeRateResponse implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     /**
-     * 币种对列表
+     * 汇率列表
      */
-    private List<CurrencyList> currencyList;
+    private List<RateList> rateList;
 
-    public List<CurrencyList> getCurrencyList() {
-        return currencyList;
+    public List<RateList> getRateList() {
+        return rateList;
     }
 
-    public void setCurrencyList(List<CurrencyList> currencyList) {
-        this.currencyList = currencyList;
+    public void setRateList(List<RateList> rateList) {
+        this.rateList = rateList;
     }
 
     /**
      * 数组元素
      */
-    public static final class CurrencyList implements Serializable {
+    public static final class RateList implements Serializable {
         private static final long serialVersionUID = 1L;
 
         /**
-         * 汇率唯一id
+         * 汇率唯一ID
          */
         private String rateReferenceId;
 
         /**
-         * 汇率类型，仅供参考还是可交易
-1、非锁汇产品,只支持reference(汇率仅参考)
-2、PAYIN锁汇产品,可支持Tradable和Reference;如果有交易需求,可联系PM商务经理沟通
+         * 汇率类型，Tradable可交易/Reference仅供参考
          */
         private String rateType;
 
         /**
-         * 买卖方向，站在客户视角，对于交易币种的买卖方向
+         * 对于交易币种的买卖方向，BUY/SELL
          */
         private String side;
 
         /**
-         * 外汇交易币种  
+         * 外汇交易币种
          */
         private String transactionCurrency;
 
         /**
-         * 币种对，外汇交易币种/外汇目标币种
+         * 币种对
          */
         private String ccyPair;
 
@@ -63,33 +61,14 @@ public class QueryClientExchangeRateResponse implements Serializable {
         private String targetCurrency;
 
         /**
-         * 汇率，代表一个单位的交易币种等于多少目标币种
+         * 汇率，代表一个单位的外汇交易币种=?目标币种汇率
          */
         private BigDecimal rate;
 
         /**
-         * 汇率过期时间
-代表汇率已过期，理论上不应该使用
-只有汇率Tradable场景,才会返回该字段
-格式：yyyy-MM-dd'T'HH:mm:ss.SSSXXX
+         * 汇率失效时间，可能为空，格式：yyyy-MM-dd’T’HH:mm:ss.SSSXXX
          */
         private String expiryTime;
-
-        /**
-         * 汇率最后可使用时间(隐含延长期)
-超过这个时间系统会进行拦截，该汇率不再可交易
-只有汇率Tradable场景,才会返回该字段
-格式：yyyy-MM-dd'T'HH:mm:ss.SSSXXX
-         */
-        private String validTime;
-
-        /**
-         * 汇率生效时间
-代表最早可以使用这个汇率的时间
-只有汇率Tradable场景,才会返回该字段
-格式：yyyy-MM-dd'T'HH:mm:ss.SSSXXX
-         */
-        private String effectTime;
 
         public String getRateReferenceId() {
             return rateReferenceId;
@@ -153,22 +132,6 @@ public class QueryClientExchangeRateResponse implements Serializable {
 
         public void setExpiryTime(String expiryTime) {
             this.expiryTime = expiryTime;
-        }
-
-        public String getValidTime() {
-            return validTime;
-        }
-
-        public void setValidTime(String validTime) {
-            this.validTime = validTime;
-        }
-
-        public String getEffectTime() {
-            return effectTime;
-        }
-
-        public void setEffectTime(String effectTime) {
-            this.effectTime = effectTime;
         }
 
     }

@@ -3,6 +3,7 @@ package com.payermax.sdk.req;
 import com.payermax.sdk.api.BaseRequest;
 import com.payermax.sdk.resp.OrderAndPayResponse;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -81,7 +82,7 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
     /**
      * 标价金额，金额的单位为元。各个国家币种支持的小数位详见交易支持国家/地区与币种,风控限额详见风控行业限额
      */
-    private Long totalAmount;
+    private BigDecimal totalAmount;
 
     /**
      * 信用卡账单信息。&lt;span style="color:red"&gt;注：如果传入该对象，则内层必填字段必须传入&lt;/span&gt;
@@ -228,11 +229,11 @@ public class OrderAndPayRequest extends BaseRequest<OrderAndPayResponse> impleme
         this.reference = reference;
     }
 
-    public Long getTotalAmount() {
+    public BigDecimal getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Long totalAmount) {
+    public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
     }
 

@@ -3,6 +3,7 @@ package com.payermax.sdk.req;
 import com.payermax.sdk.api.BaseRequest;
 import com.payermax.sdk.resp.RefundResponse;
 import java.io.Serializable;
+import java.math.BigDecimal;
 
 /**
  * 退款申请
@@ -44,7 +45,7 @@ public class RefundRequest extends BaseRequest<RefundResponse> implements Serial
     /**
      * 退款金额，金额的单位为元。 除以下国家外按照各国币种支持的小数点位（最大四位）上送。 注意：巴林、科威特、伊拉克，约旦、突尼斯、利比亚、奥马尔地区，本币只支持两位小数； 印尼、中国台湾、巴基斯坦、哥伦比亚地区，本币不支持带小数金额。
      */
-    private Long refundAmount;
+    private BigDecimal refundAmount;
 
     /**
      * 退款回调地址，可后台配置配置地址
@@ -91,11 +92,11 @@ public class RefundRequest extends BaseRequest<RefundResponse> implements Serial
         this.tradeToken = tradeToken;
     }
 
-    public Long getRefundAmount() {
+    public BigDecimal getRefundAmount() {
         return refundAmount;
     }
 
-    public void setRefundAmount(Long refundAmount) {
+    public void setRefundAmount(BigDecimal refundAmount) {
         this.refundAmount = refundAmount;
     }
 
