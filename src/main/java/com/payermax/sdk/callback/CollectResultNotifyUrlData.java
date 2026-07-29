@@ -48,7 +48,7 @@ public class CollectResultNotifyUrlData implements Serializable {
     /**
      * 商户传入的订单金额，金额的单位为元	
       **/
-    private Long totalAmount;
+    private String totalAmount;
 
     /**
      * VA单号
@@ -136,11 +136,11 @@ public class CollectResultNotifyUrlData implements Serializable {
         this.reference = reference;
     }
 
-    public Long getTotalAmount() {
+    public String getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Long totalAmount) {
+    public void setTotalAmount(String totalAmount) {
         this.totalAmount = totalAmount;
     }
 
@@ -277,7 +277,7 @@ public class CollectResultNotifyUrlData implements Serializable {
         /**
          * 支付金额
           **/
-        private Long payAmount;
+        private String payAmount;
 
         /**
          * 标价币种转换为支付币种的汇率
@@ -315,11 +315,11 @@ public class CollectResultNotifyUrlData implements Serializable {
             this.cardInfo = cardInfo;
         }
 
-        public Long getPayAmount() {
+        public String getPayAmount() {
             return payAmount;
         }
 
-        public void setPayAmount(Long payAmount) {
+        public void setPayAmount(String payAmount) {
             this.payAmount = payAmount;
         }
 

@@ -37,7 +37,7 @@ public class RefundResultNotifyUrlData implements Serializable {
     /**
      * 退款金额，金额的单位为元。
       **/
-    private Long refundAmount;
+    private String refundAmount;
 
     /**
      * 退款单状态: REFUND_SUCCESS，REFUND_FAILED
@@ -84,11 +84,11 @@ public class RefundResultNotifyUrlData implements Serializable {
         this.refundFinishTime = refundFinishTime;
     }
 
-    public Long getRefundAmount() {
+    public String getRefundAmount() {
         return refundAmount;
     }
 
-    public void setRefundAmount(Long refundAmount) {
+    public void setRefundAmount(String refundAmount) {
         this.refundAmount = refundAmount;
     }
 

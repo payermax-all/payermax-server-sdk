@@ -6,7 +6,7 @@
 
     <groupId>com.payermax</groupId>
     <artifactId>payermax-server-sdk</artifactId>
-    <version>1.0.16</version>
+    <version>1.0.17</version>
 
     <name>payermax-server-sdk</name>
     <url>https://www.payermax.com/</url>
@@ -135,7 +135,6 @@
                 <extensions>true</extensions>
                 <configuration>
                     <publishingServerId>ossrh</publishingServerId>
-                    <tokenAuth>true</tokenAuth>
                 </configuration>
             </plugin>
             <!-- maven-gpg 插件 -->

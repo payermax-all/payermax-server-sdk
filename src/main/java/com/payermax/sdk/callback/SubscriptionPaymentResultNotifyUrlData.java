@@ -218,18 +218,18 @@ FAILED：支付失败
         /**
          * 金额。
           **/
-        private Long amount;
+        private String amount;
 
         /**
          * 币种。
           **/
         private String currency;
 
-        public Long getAmount() {
+        public String getAmount() {
             return amount;
         }
 
-        public void setAmount(Long amount) {
+        public void setAmount(String amount) {
             this.amount = amount;
         }
 
