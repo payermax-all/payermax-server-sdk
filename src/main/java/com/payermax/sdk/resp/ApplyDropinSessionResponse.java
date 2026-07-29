@@ -12,7 +12,7 @@ public class ApplyDropinSessionResponse implements Serializable {
 
     /**
      * Drop-in
-      **/
+     */
     private String sessionKey;
 
     /**
@@ -22,7 +22,7 @@ public class ApplyDropinSessionResponse implements Serializable {
 
     /**
      * 前端SDK初始化参数
-      **/
+     */
     private String clientKey;
 
     public String getSessionKey() {

@@ -11,7 +11,7 @@ public class AuthResultNotifyUrlData implements Serializable {
     private static final long serialVersionUID = 1L;
 
     /**
-     * 用户支付的国家代码，大写字母	
+     * 用户支付的国家代码，大写字母
       **/
     private String country;
 
@@ -19,7 +19,6 @@ public class AuthResultNotifyUrlData implements Serializable {
      * 费用信息，支付成功且存在费用时才返回
       **/
     private Fees fees;
-
     /**
      * 渠道订单号
       **/
@@ -36,14 +35,14 @@ public class AuthResultNotifyUrlData implements Serializable {
     private String thirdChannelNo;
 
     /**
-     * 商户自定义附加数据，回调中原样返回	
+     * 商户自定义附加数据，回调中原样返回
       **/
     private String reference;
 
     /**
-     * 商户传入的订单金额，金额的单位为元	
+     * 商户传入的订单金额，金额的单位为元
       **/
-    private Long totalAmount;
+    private String totalAmount;
 
     /**
      * VA单号
@@ -51,7 +50,7 @@ public class AuthResultNotifyUrlData implements Serializable {
     private String paymentCode;
 
     /**
-     * 商户订单号	
+     * 商户订单号
       **/
     private String outTradeNo;
 
@@ -61,7 +60,7 @@ public class AuthResultNotifyUrlData implements Serializable {
     private String authorizationType;
 
     /**
-     * PayerMax交易流水号	
+     * PayerMax交易流水号
       **/
     private String tradeToken;
 
@@ -133,11 +132,11 @@ public class AuthResultNotifyUrlData implements Serializable {
         this.reference = reference;
     }
 
-    public Long getTotalAmount() {
+    public String getTotalAmount() {
         return totalAmount;
     }
 
-    public void setTotalAmount(Long totalAmount) {
+    public void setTotalAmount(String totalAmount) {
         this.totalAmount = totalAmount;
     }
 
@@ -352,7 +351,7 @@ public class AuthResultNotifyUrlData implements Serializable {
         private String cardIdentifierNo;
 
         /**
-         * 3ds结果	
+         * 3ds结果
           **/
         private ThreeDSResult threeDSResult;
 
@@ -427,12 +426,12 @@ public class AuthResultNotifyUrlData implements Serializable {
         private String cavv;
 
         /**
-         * 身份验证结果标识	
+         * 身份验证结果标识
           **/
         private String xid;
 
         /**
-         * the Directory Server (DS)分配的唯一标识	
+         * the Directory Server (DS)分配的唯一标识
           **/
         private String dsTransactionId;
 
